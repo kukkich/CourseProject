@@ -39,7 +39,7 @@ namespace CourseProject.Tests.Geometry
                 new(3, 7),
             };
 
-            var computedNodes = _gridBuilder.Build(2).Nodes;
+            var computedNodes = _gridBuilder.Build(new AxisSplitParameter(2, 2)).Nodes;
 
             Assert.That(expected.SequenceEqual(computedNodes), Is.True);
         }
@@ -63,7 +63,7 @@ namespace CourseProject.Tests.Geometry
                 ))
             };
 
-            var computedGrid = _gridBuilder.Build(2).Elements;
+            var computedGrid = _gridBuilder.Build(new AxisSplitParameter(2, 2)).Elements;
 
             Assert.That(expected.SequenceEqual(computedGrid), Is.True);
         }
