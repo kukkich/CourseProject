@@ -1,4 +1,4 @@
-namespace CourseProject.Tests
+namespace CourseProject.Tests.ThirdPartyClasses
 {
     public class SortedSetTests
     {

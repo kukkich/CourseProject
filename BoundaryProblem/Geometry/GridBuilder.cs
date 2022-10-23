@@ -1,20 +1,20 @@
 ﻿namespace BoundaryProblem.Geometry
 {
-    public class RectangleArea : IComputationalArea<Point2D, RectElement>
+    public class GridBuilder
     {
         private readonly Rectangle _area;
 
-        public RectangleArea(Rectangle area)
+        public GridBuilder(Rectangle area)
         {
             _area = area;
         }
 
-        public IGrid<Point2D, RectElement> BuildGrid(int stepsCount)
+        public Grid Build(int stepsCount)
         {
             var xStep = CalcStep(_area.LeftBottom.X, _area.RightBottom.X, stepsCount);
             var yStep = CalcStep(_area.LeftBottom.Y, _area.LeftTop.Y, stepsCount);
 
-            return new RectGrid(
+            return new Grid(
                 GenerateNodes(xStep, yStep, stepsCount),
                 GenerateElements(xStep, yStep, stepsCount)
                 );
@@ -40,7 +40,7 @@
 
         }
 
-        public IEnumerable<RectElement> GenerateElements(double xStep, double yStep, int stepsCount)
+        private IEnumerable<Element> GenerateElements(double xStep, double yStep, int stepsCount)
         {
             for (var i = 0; i < stepsCount; i++)
             {
@@ -48,7 +48,7 @@
                 {
                     var x = _area.LeftBottom.X + xStep * j;
                     var y = _area.LeftBottom.Y + yStep * i;
-                    yield return new RectElement(new Rectangle(
+                    yield return new Element(new Rectangle(
                         new Point2D(x, y),
                         new Point2D(x + xStep, y),
                         new Point2D(x, y + yStep),

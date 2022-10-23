@@ -1,6 +1,6 @@
 ﻿namespace BoundaryProblem.Geometry
 {
-    public class RectElement : IFiniteElement<Point2D>
+    public readonly record struct Element
     {
         public IEnumerable<Point2D> LocalNodes
         {
@@ -15,7 +15,7 @@
 
         private readonly Rectangle _rectangle;
 
-        public RectElement(Rectangle rectangle)
+        public Element(Rectangle rectangle)
         {
             _rectangle = rectangle;
         }
