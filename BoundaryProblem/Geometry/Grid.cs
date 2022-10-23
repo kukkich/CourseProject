@@ -7,8 +7,8 @@
         public List<NodeIndexes> ElementNodeIndexes { get; private set; }
 
         public Grid(
-            IEnumerable<Point2D> nodes, 
-            IEnumerable<Element> elements, 
+            IEnumerable<Point2D> nodes,
+            IEnumerable<Element> elements,
             IEnumerable<NodeIndexes> elementNodeIndexes
         )
         {

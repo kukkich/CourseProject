@@ -19,7 +19,7 @@
                 CalcStep(_area.LeftBottom.X, _area.RightBottom.X, _splitParameter.XSteps),
                 CalcStep(_area.LeftBottom.Y, _area.LeftTop.Y, _splitParameter.YSteps)
             );
-            
+
 
             return new Grid(
                 GenerateNodes,

@@ -17,7 +17,7 @@ namespace CourseProject.Tests.Geometry
                 new Point2D(1, 7),
                 new Point2D(3, 7)
             );
-            
+
             _gridBuilder = new GridBuilder(_rect);
         }
 
