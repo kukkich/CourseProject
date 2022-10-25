@@ -1,4 +1,6 @@
-﻿namespace BoundaryProblem.Geometry
+﻿using System.Collections;
+
+namespace BoundaryProblem.Geometry
 {
     /// <summary>
     /// --------
@@ -12,5 +14,19 @@
         int RightBottom,
         int LeftTop,
         int RightTop
-    );
+    ) : IEnumerable<int>
+    {
+        public IEnumerator<int> GetEnumerator()
+        {
+            yield return LeftBottom;
+            yield return RightBottom;
+            yield return LeftTop;
+            yield return RightTop;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 }

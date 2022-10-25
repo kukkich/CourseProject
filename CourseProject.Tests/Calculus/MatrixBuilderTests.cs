@@ -3,7 +3,7 @@ using BoundaryProblem.Geometry;
 
 namespace CourseProject.Tests.Calculus
 {
-    internal class MatrixBuilderTests
+    public class MatrixBuilderTests
     {
         private MatrixBuilder _matrixBuilder;
         private Point2D[] _points;
@@ -12,12 +12,14 @@ namespace CourseProject.Tests.Calculus
         [SetUp]
         public void Setup()
         {
-            _matrixBuilder = new();
+            _matrixBuilder = new MatrixBuilder();
             _points = Array.Empty<Point2D>();
             _elems = Array.Empty<Element>();
         }
 
-        private Grid Splited_3X_To_2Y_Grid => new(_points, _elems,
+        private Grid Splited_3X_To_2Y_Grid => new(
+            new Point2D[12],
+            _elems,
             new NodeIndexes[]
             {
                 new(0, 1, 4, 5),
@@ -69,7 +71,9 @@ namespace CourseProject.Tests.Calculus
             Assert.That(expected.SequenceEqual(rowIndexes), Is.True);
         }
 
-        private Grid Splited_2X_To_2Y_Grid => new(_points, _elems,
+        private Grid Splited_2X_To_2Y_Grid => new(
+            new Point2D[9],
+            _elems,
             new List<NodeIndexes>
             {
                 new(0, 1, 3, 4),
@@ -87,7 +91,7 @@ namespace CourseProject.Tests.Calculus
                 .RowIndexes
                 .ToArray();
 
-            var expected = new[] { 0, 1, 2, 4, 8, 10, 12, 16, 19 };
+            var expected = new[] { 0, 1, 2, 4, 8, 11, 13, 17, 20 };
 
             Assert.That(expected.SequenceEqual(rowIndexes), Is.True);
         }
@@ -107,7 +111,7 @@ namespace CourseProject.Tests.Calculus
                 1,
                 0, 1,
                 0, 1, 2, 3,
-                1, 2,
+                1, 2, 4,
                 3, 4,
                 3, 4, 5, 6,
                 4, 5, 7
@@ -116,7 +120,9 @@ namespace CourseProject.Tests.Calculus
             Assert.That(expected.SequenceEqual(rowIndexes), Is.True);
         }
 
-        private Grid Splited_2X_To_4Y_Grid => new(_points, _elems,
+        private Grid Splited_2X_To_4Y_Grid => new(
+            new Point2D[15], 
+            _elems,
             new List<NodeIndexes>
             {
                 new(0, 1, 3, 4),
