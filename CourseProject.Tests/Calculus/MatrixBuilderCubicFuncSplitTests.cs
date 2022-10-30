@@ -5,7 +5,7 @@ namespace CourseProject.Tests.Calculus
 {
     internal class MatrixBuilderCubicFuncSplitTests
     {
-        private GridMatrixBuilder _gridMatrixBuilder;
+        private GridMatrixPortraitBuilder _gridMatrixPortraitBuilder;
         private List<int> _expectedIG;
         private List<int> _expectedJG;
         private Point2D[] _points;
@@ -13,7 +13,7 @@ namespace CourseProject.Tests.Calculus
         [SetUp]
         public void Setup()
         {
-            _gridMatrixBuilder = new GridMatrixBuilder();
+            _gridMatrixPortraitBuilder = new GridMatrixPortraitBuilder();
 
             List<List<int>> lowerNodesLists = new();
             for (int i = 0; i < 16; i++)
@@ -49,7 +49,7 @@ namespace CourseProject.Tests.Calculus
             _points = new Point2D[28];
         }
 
-        private Grid Splited_1X_To_2Y_Grid => new(
+        private Grid Splited_1X_To_2Y_Grid => new (
             _points,
             new List<Element>
             {
@@ -67,14 +67,15 @@ namespace CourseProject.Tests.Calculus
                     20, 21, 22, 23,
                     24, 25, 26, 27,
                 })
-            });
+            }, 
+            default);
 
         [Test]
         public void TestRowIndexes_Split_1X_To_2Y()
         {
             var grid = Splited_1X_To_2Y_Grid;
 
-            var rowIndexes = _gridMatrixBuilder.Build(grid)
+            var rowIndexes = _gridMatrixPortraitBuilder.Build(grid)
                 .RowIndexes
                 .ToArray();
 
@@ -86,7 +87,7 @@ namespace CourseProject.Tests.Calculus
         {
             var grid = Splited_1X_To_2Y_Grid;
 
-            var rowIndexes = _gridMatrixBuilder.Build(grid)
+            var rowIndexes = _gridMatrixPortraitBuilder.Build(grid)
                 .ColumnIndexes
                 .ToArray();
 

@@ -1,31 +1,29 @@
 ﻿using BoundaryProblem.Geometry;
 using BoundaryProblem.Extensions;
-using BoundaryProblem.Calculus.Equasion;
+using BoundaryProblem.Calculus.Equation.DataStructures;
 
 namespace BoundaryProblem.Calculus
 {
-    public class GridMatrixBuilder
+    public class GridMatrixPortraitBuilder
     {
         private Grid _grid;
 
-        public SparseMatrix Build(Grid grid)
+        public SymmetricSparseMatrix Build(Grid grid)
         {
             _grid = grid;
 
             var indexesLists = GetLowerNodeIndexesLists();
 
             var rowIndexes = GetRowIndexes(indexesLists);
-            var columnIndexes = GetColumnIndexes(indexesLists);
-
-            return new SparseMatrix(rowIndexes, columnIndexes);
+            var columnIndexes = GetColumnIndexes(indexesLists).ToArray();
+            
+            return new SymmetricSparseMatrix(rowIndexes, columnIndexes);
         }
 
         private SortedSet<int>[] GetLowerNodeIndexesLists()
         {
             var indexesLists = GetDefaultIndexesLists();
 
-
-            //foreach (var relatedIndexes in _grid.ElementNodeIndexes)
             foreach (var element in _grid.Elements)
             {
                 var relatedIndexes = element.NodeIndexes;

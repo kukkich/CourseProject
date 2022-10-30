@@ -4,36 +4,40 @@
     {
         public IEnumerable<Point2D> Nodes { get; }
         public IEnumerable<Element> Elements { get; }
+        public Point2D ElementLength { get; }
+        public Point2D DistanceBetweenNodes => ElementLength / Element.STEPS_INSIDE_ELEMENT;
 
         public Grid(
             IEnumerable<Point2D> nodes,
-            IEnumerable<Element> elements
+            IEnumerable<Element> elements,
+            Point2D elementLength
         )
         {
             Nodes = nodes.ToArray();
             Elements = elements.ToArray();
+            ElementLength = elementLength;
         }
 
-        public void Serialize(ProblemFilePathsProvider filesProvider)
+        public static void Serialize(Grid grid, ProblemFilePathsProvider filesProvider)
         {
             using StreamWriter nodesWriter = new(filesProvider.Nodes);
-            SerializeNodes(nodesWriter);
+            SerializeNodes(grid.Nodes, nodesWriter);
 
             using StreamWriter elementsWriter = new(filesProvider.Elems);
-            SerializeElems(elementsWriter);
+            SerializeElems(grid.Elements, elementsWriter);
         }
 
-        private void SerializeNodes(TextWriter writer)
+        private static void SerializeNodes(IEnumerable<Point2D> nodes, TextWriter writer)
         {
-            writer.WriteLine(Nodes.Count());
-            foreach (var (x, y) in Nodes)
+            writer.WriteLine(nodes.Count());
+            foreach (var (x, y) in nodes)
                 writer.WriteLine(x + ' ' + y);
         }
 
-        private void SerializeElems(TextWriter writer)
+        private static void SerializeElems(IEnumerable<Element> elems, TextWriter writer)
         {
-            writer.WriteLine(Elements.Count());
-            foreach (var elem in Elements)
+            writer.WriteLine(elems.Count());
+            foreach (var elem in elems)
             {
                 foreach (var index in elem.NodeIndexes)
                 {
