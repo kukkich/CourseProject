@@ -1,23 +1,22 @@
-﻿namespace BoundaryProblem.Geometry
+﻿using BoundaryProblem.Calculus;
+
+namespace BoundaryProblem.Geometry
 {
     public readonly record struct Element
     {
-        public IEnumerable<Point2D> LocalNodes
-        {
-            get
-            {
-                yield return _rectangle.LeftBottom;
-                yield return _rectangle.RightBottom;
-                yield return _rectangle.LeftTop;
-                yield return _rectangle.RightTop;
-            }
-        }
+        public int[] NodeIndexes { get; }
+
+        public const int STEPS_INSIDE_ELEMENT = 3;
+
+        public readonly int MaterialId;
 
         private readonly Rectangle _rectangle;
 
-        public Element(Rectangle rectangle)
+        public Element(Rectangle rectangle, int[] nodeIndexes, int materialId=0)
         {
             _rectangle = rectangle;
+            NodeIndexes = nodeIndexes;
+            MaterialId = 0;
         }
     }
 }

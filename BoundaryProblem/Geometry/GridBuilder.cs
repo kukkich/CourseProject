@@ -2,29 +2,34 @@
 {
     public class GridBuilder
     {
-
+        private readonly int _stepsInsideElement;
         private readonly Rectangle _area;
         private AxisSplitParameter _splitParameter;
-        private Point2D _stepSize;
+        private Point2D _stepSizeForElements;
+        private Point2D _stepSizeForNodes;
 
         public GridBuilder(Rectangle area)
         {
+            _stepsInsideElement = Element.STEPS_INSIDE_ELEMENT;
             _area = area;
         }
 
         public Grid Build(AxisSplitParameter splitParameter)
         {
             _splitParameter = splitParameter;
-            _stepSize = new Point2D(
+            _stepSizeForElements = new Point2D(
                 CalcStep(_area.LeftBottom.X, _area.RightBottom.X, _splitParameter.XSteps),
                 CalcStep(_area.LeftBottom.Y, _area.LeftTop.Y, _splitParameter.YSteps)
             );
-
+            _stepSizeForNodes = new Point2D(
+                CalcStep(_area.LeftBottom.X, _area.RightBottom.X, _splitParameter.XSteps * _stepsInsideElement),
+                CalcStep(_area.LeftBottom.Y, _area.LeftTop.Y, _splitParameter.YSteps * _stepsInsideElement)
+            );
 
             return new Grid(
                 GenerateNodes,
-                GenerateElements,
-                ElementNodeIndexes
+                GenerateElements
+                //ElementNodeIndexes
                 );
         }
 
@@ -37,12 +42,12 @@
         {
             get
             {
-                for (var i = 0; i <= _splitParameter.YSteps; i++)
+                for (var i = 0; i <= _splitParameter.YSteps * _stepsInsideElement; i++)
                 {
-                    for (var j = 0; j <= _splitParameter.XSteps; j++)
+                    for (var j = 0; j <= _splitParameter.XSteps * _stepsInsideElement; j++)
                     {
-                        var x = _area.LeftBottom.X + _stepSize.X * j;
-                        var y = _area.LeftBottom.Y + _stepSize.Y * i;
+                        var x = _area.LeftBottom.X + _stepSizeForNodes.X * j;
+                        var y = _area.LeftBottom.Y + _stepSizeForNodes.Y * i;
 
                         yield return new Point2D(x, y);
                     }
@@ -54,48 +59,74 @@
         {
             get
             {
+                var elementsPerXAxis = _splitParameter.XSteps;
+                var nodesPerXAxis = elementsPerXAxis * _stepsInsideElement + 1;
+
                 for (var i = 0; i < _splitParameter.YSteps; i++)
                 {
                     for (var j = 0; j < _splitParameter.XSteps; j++)
                     {
-                        var x = _area.LeftBottom.X + _stepSize.X * j;
-                        var y = _area.LeftBottom.Y + _stepSize.Y * i;
+                        var x = _area.LeftBottom.X + _stepSizeForElements.X * j;
+                        var y = _area.LeftBottom.Y + _stepSizeForElements.Y * i;
 
-                        yield return new Element(new Rectangle(
-                            new Point2D(x, y),
-                            new Point2D(x + _stepSize.X, y),
-                            new Point2D(x, y + _stepSize.Y),
-                            new Point2D(x + _stepSize.X, y + _stepSize.Y)
-                        ));
-                    }
-                }
-            }
-        }
+                        var indexes = new List<int>();
+                        var leftBottomStartIndex =
+                            (i * _stepsInsideElement) * nodesPerXAxis +
+                            _stepsInsideElement * j;
+                        for (int k = 0; k <= _stepsInsideElement; k++)
+                        {
+                            for (int l = 0; l <= _stepsInsideElement; l++)
+                            {
+                                var globalIndex = leftBottomStartIndex + k * nodesPerXAxis + l;
+                                indexes.Add(globalIndex);
+                            }
+                        }
 
-        private IEnumerable<NodeIndexes> ElementNodeIndexes
-        {
-            get
-            {
-                var nodesPerXAxis = _splitParameter.XSteps + 1;
-                for (var i = 0; i < _splitParameter.YSteps; i++)
-                {
-                    var leftBottomStartIndex = i * nodesPerXAxis;
-                    var leftTopStartIndex = leftBottomStartIndex + nodesPerXAxis;
-
-                    for (var j = 0; j < _splitParameter.XSteps; j++)
-                    {
-                        var leftBottomIndex = leftBottomStartIndex + j;
-                        var leftTopIndex = leftTopStartIndex + j;
-
-                        yield return new NodeIndexes(
-                            leftBottomIndex,
-                            leftBottomIndex + 1,
-                            leftTopIndex,
-                            leftTopIndex + 1
+                        yield return new Element(
+                            new Rectangle(
+                                new Point2D(x, y),
+                                new Point2D(x + _stepSizeForElements.X, y),
+                                new Point2D(x, y + _stepSizeForElements.Y),
+                                new Point2D(x + _stepSizeForElements.X, y + _stepSizeForElements.Y)
+                            ),
+                            indexes.ToArray()
                         );
                     }
                 }
             }
         }
+
+        //private IEnumerable<int[]> ElementNodeIndexes
+        //{
+        //    get
+        //    {
+        //        var elementsPerXAxis = _splitParameter.XSteps;
+        //        var nodesPerXAxis = elementsPerXAxis * _stepsInsideElement + 1;
+
+        //        for (var i = 0; i < _splitParameter.YSteps; i++)
+        //        {
+        //            for (var j = 0; j < _splitParameter.XSteps; j++)
+        //            {
+        //                var indexes = new List<int>();
+
+        //                var leftBottomStartIndex = 
+        //                    (i * _stepsInsideElement) * nodesPerXAxis + 
+        //                    _stepsInsideElement * j;
+
+
+        //                for (int k = 0; k <= _stepsInsideElement; k++)
+        //                {
+        //                    for (int l = 0; l <= _stepsInsideElement; l++)
+        //                    {
+        //                        var globalIndex = leftBottomStartIndex + k * nodesPerXAxis + l;
+        //                        indexes.Add(globalIndex);
+        //                    }
+        //                }
+
+        //                yield return indexes.ToArray();
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

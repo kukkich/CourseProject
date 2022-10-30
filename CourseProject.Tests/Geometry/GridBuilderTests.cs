@@ -12,10 +12,10 @@ namespace CourseProject.Tests.Geometry
         public void Setup()
         {
             _rect = new Rectangle(
-                new Point2D(1, 1),
-                new Point2D(3, 1),
-                new Point2D(1, 7),
-                new Point2D(3, 7)
+                new Point2D(1, 3),
+                new Point2D(7, 3),
+                new Point2D(1, 15),
+                new Point2D(7, 15)
             );
 
             _gridBuilder = new GridBuilder(_rect);
@@ -24,20 +24,10 @@ namespace CourseProject.Tests.Geometry
         [Test]
         public void TestGridNodes()
         {
-            var expected = new List<Point2D>
-            {
-                new(1, 1),
-                new(2, 1),
-                new(3, 1),
-
-                new(1, 4),
-                new(2, 4),
-                new(3, 4),
-
-                new(1, 7),
-                new(2, 7),
-                new(3, 7),
-            };
+            var expected = new List<Point2D>();
+            for (int y = (int)_rect.LeftBottom.Y; y <= (int)_rect.LeftTop.Y; y += 2)
+                for (int x = (int)_rect.LeftBottom.X; x <= (int)_rect.RightBottom.X; x++)
+                    expected.Add(new Point2D(x, y));
 
             var computedNodes = _gridBuilder.Build(new AxisSplitParameter(2, 2)).Nodes;
 
@@ -45,119 +35,68 @@ namespace CourseProject.Tests.Geometry
         }
 
         [Test]
-        public void TestGridElements()
-        {
-            var expected = new List<Element>
-            {
-                new(new Rectangle(
-                    new Point2D(1, 1), new Point2D(2, 1), new Point2D(1, 4), new Point2D(2, 4)
-                )),
-                new(new Rectangle(
-                    new Point2D(2, 1), new Point2D(3, 1), new Point2D(2, 4), new Point2D(3, 4)
-                )),
-                new(new Rectangle(
-                    new Point2D(1, 4), new Point2D(2, 4), new Point2D(1, 7), new Point2D(2, 7)
-                )),
-                new(new Rectangle(
-                    new Point2D(2, 4), new Point2D(3, 4), new Point2D(2, 7), new Point2D(3, 7)
-                ))
-            };
-
-            var computedGrid = _gridBuilder.Build(new AxisSplitParameter(2, 2)).Elements;
-
-            Assert.That(expected.SequenceEqual(computedGrid), Is.True);
-        }
-
-        [Test]
         public void TestNodeIndexes_Split_1X_To_1Y()
         {
             AxisSplitParameter splitting = new(1, 1);
-            var grid = _gridBuilder.Build(splitting);
+            var nodeIndexes = _gridBuilder.Build(splitting).Elements.First().NodeIndexes;
 
-            var expected = new List<NodeIndexes>
-            {
-                new(0, 1, 2, 3)
-            };
+            var expected = new List<int>();
+            for (var i = 0; i < 16; i++)
+                expected.Add(i);
 
-            Assert.That(expected.SequenceEqual(grid.ElementNodeIndexes), Is.True);
+            Assert.That(expected.SequenceEqual(nodeIndexes), Is.True);
         }
 
         [Test]
         public void TestNodeIndexes_Split_2X_To_2Y()
         {
             AxisSplitParameter splitting = new(2, 2);
-            var grid = _gridBuilder.Build(splitting);
+            var forthElemNodeIndexes = _gridBuilder.Build(splitting)
+                .Elements
+                .Select(e => e.NodeIndexes)
+                .ToArray()
+                [3];
 
-            var expected = new List<NodeIndexes>
+            var expected = new List<int>()
             {
-                new(0, 1, 3, 4),
-                new(1, 2, 4, 5),
-                new(3, 4, 6, 7),
-                new(4, 5, 7, 8)
+                24, 25, 26, 27,
+                31, 32, 33, 34,
+                38, 39, 40, 41,
+                45, 46, 47, 48
             };
 
-            Assert.That(expected.SequenceEqual(grid.ElementNodeIndexes), Is.True);
+            Assert.That(expected.SequenceEqual(forthElemNodeIndexes), Is.True);
         }
 
         [Test]
-        public void TestNodeIndexes_Split_3X_To_2Y()
+        public void TestNodeIndexes_Split_1X_To_2Y()
         {
-            AxisSplitParameter splitting = new(3, 2);
-            var grid = _gridBuilder.Build(splitting);
+            AxisSplitParameter splitting = new(1, 2);
+            var elemsNodeIndexes = _gridBuilder.Build(splitting).Elements.Select(e => e.NodeIndexes);
 
-            var expected = new List<NodeIndexes>
+            var expected = new List<List<int>>()
             {
-                new(0, 1, 4, 5),
-                new(1, 2, 5, 6),
-                new(2, 3, 6, 7),
-                new(4, 5, 8, 9),
-                new(5, 6, 9, 10),
-                new(6, 7, 10, 11),
+                new()
+                {
+                    0, 1, 2, 3,
+                    4, 5, 6, 7,
+                    8, 9, 10, 11,
+                    12, 13, 14, 15,
+                },
+                new()
+                {
+                    12, 13, 14, 15,
+                    16, 17, 18, 19,
+                    20, 21, 22, 23,
+                    24, 25, 26, 27,
+                }
             };
 
-            Assert.That(expected.SequenceEqual(grid.ElementNodeIndexes), Is.True);
-        }
-
-        [Test]
-        public void TestNodeIndexes_Split_2X_To_4Y()
-        {
-            AxisSplitParameter splitting = new(2, 4);
-            var grid = _gridBuilder.Build(splitting);
-
-            var expected = new List<NodeIndexes>
+            Assert.Multiple(() =>
             {
-                new(0, 1, 3, 4),
-                new(1, 2, 4, 5),
-                new(3, 4, 6, 7),
-                new(4, 5, 7, 8),
-                new(6, 7, 9, 10),
-                new(7, 8, 10, 11),
-                new(9, 10, 12, 13),
-                new(10, 11, 13, 14),
-            };
-
-            Assert.That(expected.SequenceEqual(grid.ElementNodeIndexes), Is.True);
-        }
-
-        [Test]
-        public void TestNodeIndexes_Split_4X_To_2Y()
-        {
-            AxisSplitParameter splitting = new(4, 2);
-            var grid = _gridBuilder.Build(splitting);
-
-            var expected = new List<NodeIndexes>
-            {
-                new(0, 1, 5, 6),
-                new(1, 2, 6, 7),
-                new(2, 3, 7, 8),
-                new(3, 4, 8, 9),
-                new(5, 6, 10, 11),
-                new(6, 7, 11, 12),
-                new(7, 8, 12, 13),
-                new(8, 9, 13, 14),
-            };
-
-            Assert.That(expected.SequenceEqual(grid.ElementNodeIndexes), Is.True);
+                Assert.That(expected[0].SequenceEqual(elemsNodeIndexes.ToArray()[0]), Is.True);
+                Assert.That(expected[1].SequenceEqual(elemsNodeIndexes.ToArray()[1]), Is.True);
+            });
         }
     }
 }

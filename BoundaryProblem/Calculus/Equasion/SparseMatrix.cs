@@ -1,9 +1,9 @@
-﻿namespace BoundaryProblem.Calculus
+﻿namespace BoundaryProblem.Calculus.Equasion
 {
     public class SparseMatrix
     {
-        public ReadOnlySpan<int> RowIndexes => new (_rowIndexes);
-        public ReadOnlySpan<int> ColumnIndexes => new (_columnIndexes);
+        public ReadOnlySpan<int> RowIndexes => new(_rowIndexes);
+        public ReadOnlySpan<int> ColumnIndexes => new(_columnIndexes);
 
         private readonly int[] _rowIndexes;
         private readonly int[] _columnIndexes;

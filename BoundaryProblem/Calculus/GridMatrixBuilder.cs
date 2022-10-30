@@ -1,13 +1,14 @@
 ﻿using BoundaryProblem.Geometry;
 using BoundaryProblem.Extensions;
+using BoundaryProblem.Calculus.Equasion;
 
 namespace BoundaryProblem.Calculus
 {
-    public class MatrixBuilder
+    public class GridMatrixBuilder
     {
         private Grid _grid;
 
-        public SparseMatrix FromGrid(Grid grid)
+        public SparseMatrix Build(Grid grid)
         {
             _grid = grid;
 
@@ -17,15 +18,17 @@ namespace BoundaryProblem.Calculus
             var columnIndexes = GetColumnIndexes(indexesLists);
 
             return new SparseMatrix(rowIndexes, columnIndexes);
-            
         }
 
         private SortedSet<int>[] GetLowerNodeIndexesLists()
         {
             var indexesLists = GetDefaultIndexesLists();
 
-            foreach (var relatedIndexes in _grid.ElementNodeIndexes)
+
+            //foreach (var relatedIndexes in _grid.ElementNodeIndexes)
+            foreach (var element in _grid.Elements)
             {
+                var relatedIndexes = element.NodeIndexes;
                 foreach (var index in relatedIndexes)
                 {
                     var lowerIndexes = GetLowerIndexesThan(index, relatedIndexes);
@@ -38,16 +41,14 @@ namespace BoundaryProblem.Calculus
 
         private SortedSet<int>[] GetDefaultIndexesLists()
         {
-            var indexesLists = new SortedSet<int>[_grid.Nodes.Length];
+            var indexesLists = new SortedSet<int>[_grid.Nodes.Count()];
             for (var i = 0; i < indexesLists.Length; i++)
-            {
                 indexesLists[i] = new SortedSet<int>();
-            }
 
             return indexesLists;
         }
 
-        private static IEnumerable<int> GetLowerIndexesThan(int targetIndex, IEnumerable<int> indexes) => 
+        private static IEnumerable<int> GetLowerIndexesThan(int targetIndex, IEnumerable<int> indexes) =>
             indexes.Where(index => index < targetIndex);
 
         private static IEnumerable<int> GetRowIndexes(IEnumerable<SortedSet<int>> indexesLists)
@@ -60,9 +61,7 @@ namespace BoundaryProblem.Calculus
             }
         }
 
-        private static IEnumerable<int> GetColumnIndexes(IEnumerable<SortedSet<int>> indexesLists)
-        {
-            return indexesLists.SelectMany(list => list);
-        }
+        private static IEnumerable<int> GetColumnIndexes(IEnumerable<SortedSet<int>> indexesLists) =>
+            indexesLists.SelectMany(list => list);
     }
 }
