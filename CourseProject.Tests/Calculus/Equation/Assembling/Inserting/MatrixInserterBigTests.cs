@@ -1,7 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation;
 
-namespace CourseProject.Tests.Calculus.Equation.Assembling
+namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting
 {
     internal class MatrixInserterBigTests
     {

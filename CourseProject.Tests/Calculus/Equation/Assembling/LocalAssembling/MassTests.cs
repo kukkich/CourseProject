@@ -1,7 +1,6 @@
 ﻿using BoundaryProblem.Calculus.Equation.Assembling;
 using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.DataStructures;
-using CourseProject.Tests.DataStructuresMoq;
 using CourseProject.Tests.MoqDataStructures;
 
 namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssemblingTests

@@ -1,6 +1,6 @@
 ﻿using BoundaryProblem.DataStructures;
 
-namespace CourseProject.Tests.DataStructuresMoq
+namespace CourseProject.Tests.MoqDataStructures
 {
     internal class IdentityMaterialProvider : IMaterialProvider
     {

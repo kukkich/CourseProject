@@ -41,14 +41,9 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             _matrixInserter = matrixInserter;
             _localMatrixAssembler = localMatrixAssembler;
 
-
-            //(_xStiffnessMatrix, _yStiffnessMatrix) = (new Matrix(defaultStiffnessMatrix), new Matrix(defaultStiffnessMatrix));
-            //!TODO умножать на коэффициент материала лямбду, постоянную на элементе (мб умножать не прям тут)
             _xStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.X));
             _yStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.Y));
 
-            //!TODO аналогично умножать на омегу, не обязательно здесь
-            //(_xMassMatrix, _yMassMatrix) = (new Matrix(defaultMassMatrix), new Matrix(defaultMassMatrix));
             _xMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.X / 1680.0d);
             _yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
         }
