@@ -10,6 +10,7 @@ namespace BoundaryProblem.DataStructures
 
         public readonly int MaterialId;
 
+        // TODO Remove this
         private readonly Rectangle _rectangle;
 
         public Element(Rectangle rectangle, int[] nodeIndexes, int materialId = 0)

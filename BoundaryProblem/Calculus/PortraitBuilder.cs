@@ -4,7 +4,7 @@ using BoundaryProblem.Calculus.Equation.DataStructures;
 
 namespace BoundaryProblem.Calculus
 {
-    public class GridMatrixPortraitBuilder
+    public class PortraitBuilder
     {
         private Grid _grid;
 

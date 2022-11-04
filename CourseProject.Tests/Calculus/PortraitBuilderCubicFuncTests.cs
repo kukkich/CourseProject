@@ -4,9 +4,9 @@ using BoundaryProblem.Geometry;
 
 namespace CourseProject.Tests.Calculus
 {
-    internal class MatrixBuilderCubicFuncSplitTests
+    internal class PortraitBuilderCubicFuncTests
     {
-        private GridMatrixPortraitBuilder _gridMatrixPortraitBuilder;
+        private PortraitBuilder _gridMatrixPortraitBuilder;
         private List<int> _expectedIG;
         private List<int> _expectedJG;
         private Point2D[] _points;
@@ -14,7 +14,7 @@ namespace CourseProject.Tests.Calculus
         [SetUp]
         public void Setup()
         {
-            _gridMatrixPortraitBuilder = new GridMatrixPortraitBuilder();
+            _gridMatrixPortraitBuilder = new PortraitBuilder();
 
             List<List<int>> lowerNodesLists = new();
             for (int i = 0; i < 16; i++)

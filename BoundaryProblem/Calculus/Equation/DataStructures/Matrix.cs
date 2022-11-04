@@ -1,8 +1,8 @@
 ﻿namespace BoundaryProblem.Calculus.Equation.DataStructures
 {
-    public readonly struct Matrix
+    public class Matrix
     {
-        public double this[int x, int y] => _values[x, y] * _coefficient;
+        public virtual double this[int x, int y] => _values[x, y] * _coefficient;
         public int RowLength => _values.GetLength(0);
 
         private readonly double[,] _values;
@@ -14,7 +14,7 @@
             _coefficient = 1;
         }
 
-        private Matrix(double[,] values, double coefficient)
+        protected Matrix(double[,] values, double coefficient)
         {
             _values = values;
             _coefficient = coefficient;

@@ -1,7 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.DataStructures;
 
-namespace BoundaryProblem.Calculus.Equation
+namespace BoundaryProblem.Calculus.Equation.Assembling
 {
     public class LocalMatrixAssembler
     {
@@ -11,9 +11,9 @@ namespace BoundaryProblem.Calculus.Equation
         private readonly Matrix _yMassTemplate;
         private readonly Matrix _xStiffnessTemplate;
         private readonly Matrix _yStiffnessTemplate;
-        
+
         public LocalMatrixAssembler(
-            IMaterialProvider materialProvider, 
+            IMaterialProvider materialProvider,
             Matrix xMassTemplate, Matrix yMassTemplate,
             Matrix xStiffnessTemplate, Matrix yStiffnessTemplate
         )
@@ -32,7 +32,7 @@ namespace BoundaryProblem.Calculus.Equation
             var (stiffness, masses) = GetMassesAndStiffnessMatrix(material);
 
             return new LocalMatrix(
-                stiffness + masses, 
+                stiffness + masses,
                 new IndexPermutation(element.NodeIndexes)
             );
         }

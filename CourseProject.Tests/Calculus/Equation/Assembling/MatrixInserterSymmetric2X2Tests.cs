@@ -1,7 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation;
 using BoundaryProblem.Calculus.Equation.DataStructures;
 
-namespace CourseProject.Tests.Calculus.Equation
+namespace CourseProject.Tests.Calculus.Equation.Assembling
 {
     internal class MatrixInserterSymmetric2X2Tests
     {
@@ -37,7 +37,7 @@ namespace CourseProject.Tests.Calculus.Equation
 
             _inserter.Insert(_sparseMatrix, localMatrix);
 
-            var expectedDiagonal = new double[] {-1, 3, 0, 0, 0, 0};
+            var expectedDiagonal = new double[] { -1, 3, 0, 0, 0, 0 };
             var expectedFirstRow = new double[] { 41 };
             Assert.Multiple(() =>
             {
@@ -61,9 +61,9 @@ namespace CourseProject.Tests.Calculus.Equation
             });
 
             LocalMatrix localMatrix = new(
-                squareMatrix, 
+                squareMatrix,
                 new IndexPermutation(
-                    new[] { 2, 4 }, 
+                    new[] { 2, 4 },
                     new[] { 2, 4 }
                     )
                 );

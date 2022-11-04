@@ -1,7 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation;
 
-namespace CourseProject.Tests.Calculus.Equation
+namespace CourseProject.Tests.Calculus.Equation.Assembling
 {
     internal class MatrixInserterBigTests
     {
@@ -60,7 +60,7 @@ namespace CourseProject.Tests.Calculus.Equation
                         .SequenceEqual(new double[] { 0, 0, 0, 0, 8 }),
                     Is.True);
                 Assert.That(_sparseMatrix[6].Select(iv => iv.Value)
-                        .SequenceEqual(new double[] {0, 0, 0, 3, 16}),
+                        .SequenceEqual(new double[] { 0, 0, 0, 3, 16 }),
                     Is.True);
             });
         }

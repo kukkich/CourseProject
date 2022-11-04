@@ -1,7 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Geometry;
 
-namespace BoundaryProblem.Calculus.Equation
+namespace BoundaryProblem.Calculus.Equation.Assembling
 {
     public class Assembler
     {
@@ -41,7 +41,6 @@ namespace BoundaryProblem.Calculus.Equation
             _matrixInserter = matrixInserter;
             _localMatrixAssembler = localMatrixAssembler;
 
-            
 
             //(_xStiffnessMatrix, _yStiffnessMatrix) = (new Matrix(defaultStiffnessMatrix), new Matrix(defaultStiffnessMatrix));
             //!TODO умножать на коэффициент материала лямбду, постоянную на элементе (мб умножать не прям тут)
@@ -58,7 +57,7 @@ namespace BoundaryProblem.Calculus.Equation
         {
             foreach (var element in _grid.Elements)
             {
-                
+
             }
         }
 
