@@ -12,6 +12,5 @@
             _matrix = matrix;
             IndexPermutation = permutation;
         }
-
     }
 }

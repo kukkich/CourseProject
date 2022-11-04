@@ -6,7 +6,21 @@ namespace BoundaryProblem.Calculus.Equation
     {
         public void Insert(SymmetricSparseMatrix sparseMatrix, LocalMatrix localMatrix)
         {
-            throw new NotImplementedException();
+            var matrixSize = localMatrix.IndexPermutation.Length;
+            for (var i = 0; i < matrixSize; i++)
+            {
+                var row = localMatrix.IndexPermutation
+                    .ApplyRowPermutation(i);
+
+                for (var j = 0; j < matrixSize; j++)
+                {
+                    var column = localMatrix.IndexPermutation
+                        .ApplyColumnPermutation(j);
+                    if (column > row) continue;
+
+                    sparseMatrix[row, column] = localMatrix[i, j];
+                }
+            }
         }
     }
 }

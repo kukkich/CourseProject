@@ -1,4 +1,5 @@
 ﻿using BoundaryProblem.Calculus;
+using BoundaryProblem.DataStructures;
 using BoundaryProblem.Geometry;
 
 namespace CourseProject.Tests.Calculus

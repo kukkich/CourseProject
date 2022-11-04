@@ -60,7 +60,7 @@ namespace CourseProject.Tests.Calculus.Equation
                         .SequenceEqual(new double[] { 0, 0, 0, 0, 8 }),
                     Is.True);
                 Assert.That(_sparseMatrix[6].Select(iv => iv.Value)
-                        .SequenceEqual(new double[] {0, 0, 0, 3, 10}),
+                        .SequenceEqual(new double[] {0, 0, 0, 3, 16}),
                     Is.True);
             });
         }
@@ -104,7 +104,6 @@ namespace CourseProject.Tests.Calculus.Equation
             });
         }
 
-
         [Test]
         public void TestInsert_4x4()
         {
@@ -142,7 +141,7 @@ namespace CourseProject.Tests.Calculus.Equation
                 Assert.That(_sparseMatrix[6].Select(iv => iv.Value)
                         .SequenceEqual(new double[] { 4, 8, -15, 15, 0 }),
                     Is.True);
-                Assert.That(_sparseMatrix[6].Select(iv => iv.Value)
+                Assert.That(_sparseMatrix[7].Select(iv => iv.Value)
                         .SequenceEqual(new double[] { 6, -9, 15, 4 }),
                     Is.True);
             });

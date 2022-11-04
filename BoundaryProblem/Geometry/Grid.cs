@@ -1,4 +1,6 @@
-﻿namespace BoundaryProblem.Geometry
+﻿using BoundaryProblem.DataStructures;
+
+namespace BoundaryProblem.Geometry
 {
     public class Grid
     {

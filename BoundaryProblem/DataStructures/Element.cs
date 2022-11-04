@@ -1,6 +1,6 @@
-﻿using BoundaryProblem.Calculus;
+﻿using BoundaryProblem.Geometry;
 
-namespace BoundaryProblem.Geometry
+namespace BoundaryProblem.DataStructures
 {
     public readonly record struct Element
     {
@@ -12,11 +12,11 @@ namespace BoundaryProblem.Geometry
 
         private readonly Rectangle _rectangle;
 
-        public Element(Rectangle rectangle, int[] nodeIndexes, int materialId=0)
+        public Element(Rectangle rectangle, int[] nodeIndexes, int materialId = 0)
         {
             _rectangle = rectangle;
             NodeIndexes = nodeIndexes;
-            MaterialId = 0;
+            MaterialId = materialId;
         }
     }
 }

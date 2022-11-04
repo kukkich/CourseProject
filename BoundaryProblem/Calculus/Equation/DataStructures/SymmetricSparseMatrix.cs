@@ -12,10 +12,43 @@
 
                 var begin = rowIndex == 0
                     ? 0
-                    : _columnIndexes[rowIndex - 1];
+                    : _rowIndexes[rowIndex - 1];
 
                 for (var i = begin; i < end; i++)
-                    yield return new IndexValue(_columnIndexes[i], Values[i]);
+                    yield return new IndexValue(_columnIndexes[i], Values[i], i);
+            }
+        }
+
+        public double this[int rowIndex, int columnIndex]
+        {
+            set
+            {
+                if (rowIndex < 0 || columnIndex < 0) throw new ArgumentOutOfRangeException(nameof(rowIndex));
+                if (rowIndex == columnIndex)
+                {
+                    Diagonal[rowIndex] = value;
+                    return;
+                }
+                if (columnIndex > rowIndex) 
+                    (rowIndex, columnIndex) = (columnIndex, rowIndex);
+
+
+                // !TODO сделать обход через индексер строк в этом классе, не дублировать код
+                var end = _rowIndexes[rowIndex];
+
+                var begin = rowIndex == 0
+                    ? 0
+                    : _rowIndexes[rowIndex - 1];
+
+                for (var i = begin; i < end; i++)
+                {
+                    if (_columnIndexes[i] != columnIndex) continue;
+
+                    Values[i] = value;
+                    return;
+                }
+
+                throw new IndexOutOfRangeException();
             }
         }
 
@@ -52,8 +85,8 @@
         {
             _rowIndexes = rowIndexes.ToArray();
             _columnIndexes = columnIndexes.ToArray();
-            Diagonal = new double[_columnIndexes.Length];
-            Values = new double[_rowIndexes.Length];
+            Diagonal = new double[_rowIndexes.Length];
+            Values = new double[_columnIndexes.Length];
         }
     }
 }

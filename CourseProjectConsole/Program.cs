@@ -6,7 +6,7 @@ namespace CourseProjectConsole
     {
         static void Main(string[] args)
         {
-            Matrix matrix = new (new double[,] {{1, 2, 3, 322}, {4, 5, 6, 1488}, {900, 10, -42, 12}});
+            Matrix matrix = new(new double[,] { { 1, 2, 3, 322 }, { 4, 5, 6, 1488 }, { 900, 10, -42, 12 } });
 
             Console.WriteLine(matrix.RowLength);
 
@@ -15,22 +15,16 @@ namespace CourseProjectConsole
             {
                 Console.Write(i);
                 Console.Write(": [");
-                Console.Write(XIndex(i));
+                Console.Write(Mu(i));
                 Console.Write(", ");
-                Console.Write(YIndex(i));
+                Console.Write(Nu(i));
                 Console.WriteLine("]");
             }
         }
 
-        private static int XIndex(int i)
-        {
-            return i % 4;
-        }
+        private static int Mu(int i) => i % 4;
 
-        private static int YIndex(int i)
-        {
-            return i / 4;
-        }
+        private static int Nu(int i) => i / 4;
 
     }
 }
