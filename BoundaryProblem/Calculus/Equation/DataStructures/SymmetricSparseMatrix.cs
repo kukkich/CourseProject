@@ -19,15 +19,15 @@
             }
         }
 
-        public double this[int rowIndex, int columnIndex]
+        public ref double this[int rowIndex, int columnIndex]
         {
-            set
+            get
             {
                 if (rowIndex < 0 || columnIndex < 0) throw new ArgumentOutOfRangeException(nameof(rowIndex));
                 if (rowIndex == columnIndex)
                 {
-                    Diagonal[rowIndex] = value;
-                    return;
+                    //Diagonal[rowIndex] = value;
+                    return ref Diagonal[rowIndex];
                 }
                 if (columnIndex > rowIndex) 
                     (rowIndex, columnIndex) = (columnIndex, rowIndex);
@@ -43,13 +43,15 @@
                 {
                     if (_columnIndexes[i] != columnIndex) continue;
 
-                    Values[i] = value;
-                    return;
+                    //Values[i] = value;
+                    return ref Values[i];
                 }
 
                 throw new IndexOutOfRangeException();
             }
         }
+
+
 
 
 

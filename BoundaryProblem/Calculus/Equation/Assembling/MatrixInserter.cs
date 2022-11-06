@@ -21,7 +21,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
                     //throw new NotImplementedException();
                     // Сделать, чтобы элементы прибавлялись, а не приравнивались
-                    sparseMatrix[row, column] = localMatrix[i, j];
+                    sparseMatrix[row, column] += localMatrix[i, j];
                 }
             }
         }
