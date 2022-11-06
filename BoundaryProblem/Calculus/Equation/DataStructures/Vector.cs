@@ -2,7 +2,11 @@
 {
     public class Vector
     {
-        public virtual ref double this[int x] => ref _values[x];
+        public virtual double this[int x]
+        {
+            get => _values[x];
+            set => _values[x] = value;
+        }
 
         public int Length => _values.Length;
 
