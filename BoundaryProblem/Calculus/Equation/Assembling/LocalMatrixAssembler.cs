@@ -1,4 +1,5 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
+using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 using BoundaryProblem.DataStructures;
 
 namespace BoundaryProblem.Calculus.Equation.Assembling

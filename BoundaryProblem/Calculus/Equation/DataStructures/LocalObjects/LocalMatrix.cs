@@ -1,16 +1,15 @@
-﻿namespace BoundaryProblem.Calculus.Equation.DataStructures
+﻿namespace BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects
 {
-    public class LocalMatrix
+    public class LocalMatrix : LocalObject
     {
         public double this[int x, int y] => _matrix[x, y];
-        public readonly IndexPermutation IndexPermutation;
 
         private readonly Matrix _matrix;
 
         public LocalMatrix(Matrix matrix, IndexPermutation permutation)
+            : base(permutation)
         {
             _matrix = matrix;
-            IndexPermutation = permutation;
         }
     }
 }

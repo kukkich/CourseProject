@@ -3,7 +3,7 @@ using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.DataStructures;
 using CourseProject.Tests.MoqDataStructures;
 
-namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssemblingTests
+namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssembling
 {
     internal class MatrixPermutationTests
     {
@@ -38,11 +38,11 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssemblingTests
             {
                 for (int i = 0; i < permutation.Length; i++)
                 {
-                    Assert.That(assembledMatrix.IndexPermutation.ApplyColumnPermutation(i),
-                        Is.EqualTo(expectedPermutation.ApplyColumnPermutation(i)));
+                    Assert.That(assembledMatrix.IndexPermutation.ApplyPermutation(i),
+                        Is.EqualTo(expectedPermutation.ApplyPermutation(i)));
 
-                    Assert.That(assembledMatrix.IndexPermutation.ApplyRowPermutation(i),
-                        Is.EqualTo(expectedPermutation.ApplyRowPermutation(i)));
+                    Assert.That(assembledMatrix.IndexPermutation.ApplyPermutation(i),
+                        Is.EqualTo(expectedPermutation.ApplyPermutation(i)));
                 }
             });
         }

@@ -3,7 +3,7 @@ using BoundaryProblem.Geometry;
 
 namespace BoundaryProblem.Calculus.Equation.Assembling
 {
-    public class Assembler
+    public class GlobalAssembler
     {
         private static readonly double[,] DefaultStiffnessMatrix;
         private static readonly double[,] DefaultMassMatrix;
@@ -16,7 +16,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
         private readonly MatrixInserter _matrixInserter;
         private readonly LocalMatrixAssembler _localMatrixAssembler;
 
-        static Assembler()
+        static GlobalAssembler()
         {
             DefaultStiffnessMatrix = new double[,]
             {
@@ -35,7 +35,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             };
         }
 
-        public Assembler(Grid grid, MatrixInserter matrixInserter, LocalMatrixAssembler localMatrixAssembler)
+        public GlobalAssembler(Grid grid, MatrixInserter matrixInserter, LocalMatrixAssembler localMatrixAssembler)
         {
             _grid = grid;
             _matrixInserter = matrixInserter;
@@ -48,17 +48,19 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             _yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
         }
 
-        public void BuildGlobalMatrix()
+        public void BuildMatrix()
         {
             foreach (var element in _grid.Elements)
             {
 
             }
+
+            throw new NotImplementedException();
         }
 
         public void ApplyBoundaryConditions()
         {
-
+            throw new NotImplementedException();
         }
     }
 }

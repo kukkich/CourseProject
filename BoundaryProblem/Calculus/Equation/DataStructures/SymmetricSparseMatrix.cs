@@ -32,7 +32,6 @@
                 if (columnIndex > rowIndex) 
                     (rowIndex, columnIndex) = (columnIndex, rowIndex);
 
-
                 // !TODO сделать обход через индексер строк в этом классе, не дублировать код
                 var end = _rowIndexes[rowIndex];
 
@@ -51,6 +50,8 @@
                 throw new IndexOutOfRangeException();
             }
         }
+
+
 
         public ReadOnlySpan<int> RowIndexes => new(_rowIndexes);
         public ReadOnlySpan<int> ColumnIndexes => new(_columnIndexes);
@@ -88,5 +89,6 @@
             Diagonal = new double[_rowIndexes.Length];
             Values = new double[_columnIndexes.Length];
         }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
+using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 
-namespace BoundaryProblem.Calculus.Equation
+namespace BoundaryProblem.Calculus.Equation.Assembling
 {
     public class MatrixInserter
     {
@@ -10,14 +11,16 @@ namespace BoundaryProblem.Calculus.Equation
             for (var i = 0; i < matrixSize; i++)
             {
                 var row = localMatrix.IndexPermutation
-                    .ApplyRowPermutation(i);
+                    .ApplyPermutation(i);
 
                 for (var j = 0; j < matrixSize; j++)
                 {
                     var column = localMatrix.IndexPermutation
-                        .ApplyColumnPermutation(j);
+                        .ApplyPermutation(j);
                     if (column > row) continue;
 
+                    //throw new NotImplementedException();
+                    // Сделать, чтобы элементы прибавлялись, а не приравнивались
                     sparseMatrix[row, column] = localMatrix[i, j];
                 }
             }

@@ -2,21 +2,14 @@
 {
     public readonly struct IndexPermutation
     {
-        public int ApplyRowPermutation(int index) => _rowPermutation[index];
-        public int ApplyColumnPermutation(int index) => _columnPermutation[index];
-        public int Length => _rowPermutation.Length;
+        public int ApplyPermutation(int index) => _permutation[index];
+        public int Length => _permutation.Length;
 
-        private readonly int[] _rowPermutation;
-        private readonly int[] _columnPermutation;
-
-        public IndexPermutation(int[] rowPermutation, int[] columnPermutation)
-        {
-            _rowPermutation = rowPermutation;
-            _columnPermutation = columnPermutation;
-        }
+        private readonly int[] _permutation;
 
         public IndexPermutation(int[] permutation)
-            :this(permutation, permutation) 
-            { }
+        {
+            _permutation = permutation;
+        }
     }
 }

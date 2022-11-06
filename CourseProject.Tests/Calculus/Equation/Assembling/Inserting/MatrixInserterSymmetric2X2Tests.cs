@@ -1,5 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation;
+using BoundaryProblem.Calculus.Equation.Assembling;
 using BoundaryProblem.Calculus.Equation.DataStructures;
+using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 
 namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting
 {
@@ -29,10 +31,7 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting
 
             LocalMatrix localMatrix = new(
                 squareMatrix,
-                new IndexPermutation(
-                    new[] { 0, 1 },
-                    new[] { 0, 1 }
-                    )
+                new IndexPermutation(new[] { 0, 1 })
                 );
 
             _inserter.Insert(_sparseMatrix, localMatrix);
@@ -62,10 +61,7 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting
 
             LocalMatrix localMatrix = new(
                 squareMatrix,
-                new IndexPermutation(
-                    new[] { 2, 4 },
-                    new[] { 2, 4 }
-                    )
+                new IndexPermutation(new[] { 2, 4 })
                 );
 
             _inserter.Insert(_sparseMatrix, localMatrix);
