@@ -68,9 +68,6 @@ namespace BoundaryProblem.Geometry
                 {
                     for (var j = 0; j < _splitParameter.XSteps; j++)
                     {
-                        var x = _area.LeftBottom.X + _stepSizeForElements.X * j;
-                        var y = _area.LeftBottom.Y + _stepSizeForElements.Y * i;
-
                         var indexes = new List<int>();
                         var leftBottomStartIndex =
                             (i * _stepsInsideElement) * nodesPerXAxis +
@@ -84,51 +81,10 @@ namespace BoundaryProblem.Geometry
                             }
                         }
 
-                        yield return new Element(
-                            new Rectangle(
-                                new Point2D(x, y),
-                                new Point2D(x + _stepSizeForElements.X, y),
-                                new Point2D(x, y + _stepSizeForElements.Y),
-                                new Point2D(x + _stepSizeForElements.X, y + _stepSizeForElements.Y)
-                            ),
-                            indexes.ToArray()
-                        );
+                        yield return new Element(indexes.ToArray());
                     }
                 }
             }
         }
-
-        //private IEnumerable<int[]> ElementNodeIndexes
-        //{
-        //    get
-        //    {
-        //        var elementsPerXAxis = _splitParameter.XSteps;
-        //        var nodesPerXAxis = elementsPerXAxis * _stepsInsideElement + 1;
-
-        //        for (var i = 0; i < _splitParameter.YSteps; i++)
-        //        {
-        //            for (var j = 0; j < _splitParameter.XSteps; j++)
-        //            {
-        //                var indexes = new List<int>();
-
-        //                var leftBottomStartIndex = 
-        //                    (i * _stepsInsideElement) * nodesPerXAxis + 
-        //                    _stepsInsideElement * j;
-
-
-        //                for (int k = 0; k <= _stepsInsideElement; k++)
-        //                {
-        //                    for (int l = 0; l <= _stepsInsideElement; l++)
-        //                    {
-        //                        var globalIndex = leftBottomStartIndex + k * nodesPerXAxis + l;
-        //                        indexes.Add(globalIndex);
-        //                    }
-        //                }
-
-        //                yield return indexes.ToArray();
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

@@ -45,10 +45,8 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssemblingTests
         [TestCase(6, 13, 20d)]
         public void CorrectValuesTest(int x, int y, double expected)
         {
-            var assembledMatrix = _assembler.Assemble(new Element(
-                default,
-                _identityPermutation 
-                ));
+            var assembledMatrix = _assembler.Assemble(
+                new Element(_identityPermutation));
 
             Assert.That(assembledMatrix[x, y], Is.EqualTo(expected));
         }

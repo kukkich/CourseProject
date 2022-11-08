@@ -45,10 +45,9 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssemblingTests
         [TestCase(2, 7, -18d)]
         public void CorrectValuesTest(int x, int y, double expected)
         {
-            var assembledMatrix = _assembler.Assemble(new Element(
-                default,
-                _identityPermutation
-            ));
+            var assembledMatrix = _assembler.Assemble(
+                new Element(_identityPermutation)
+            );
 
             Assert.That(assembledMatrix[x, y], Is.EqualTo(expected + 1));
             // 1 from Identity mass matrices: M_x[i,j]*M_y[k,l] = 1

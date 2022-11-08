@@ -30,10 +30,9 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssembling
         {
             var expectedPermutation = new IndexPermutation(permutation);
 
-            var assembledMatrix = _assembler.Assemble(new Element(
-                default,
-                permutation
-            ));
+            var assembledMatrix = _assembler.Assemble(
+                new Element(permutation)
+            );
 
             Assert.Multiple(() =>
             {
