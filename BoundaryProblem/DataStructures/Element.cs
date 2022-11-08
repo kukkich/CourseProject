@@ -4,9 +4,9 @@ namespace BoundaryProblem.DataStructures
 {
     public readonly record struct Element
     {
+        public const int StepsInsideElement = 3;
+        public const int NodesInElement = (StepsInsideElement + 1) * (StepsInsideElement + 1);
         public int[] NodeIndexes { get; }
-
-        public const int STEPS_INSIDE_ELEMENT = 3;
 
         public readonly int MaterialId;
 

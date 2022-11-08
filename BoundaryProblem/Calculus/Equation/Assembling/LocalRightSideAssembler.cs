@@ -5,26 +5,20 @@ using BoundaryProblem.DataStructures.DensityFunction;
 
 namespace BoundaryProblem.Calculus.Equation.Assembling
 {
-    public class LocalRightSideAssembler
+    public class LocalRightSideAssembler : LocalAssembler
     {
-        private const int NodesInElement = (Element.STEPS_INSIDE_ELEMENT + 1) * (Element.STEPS_INSIDE_ELEMENT + 1);
         private readonly IDensityFunctionProvider _functionProvider;
-        private readonly Matrix _xMassTemplate;
-        private readonly Matrix _yMassTemplate;
 
         public LocalRightSideAssembler(
             IDensityFunctionProvider functionProvider,
             Matrix xMassTemplate, Matrix yMassTemplate
-            )
+        ) : base(xMassTemplate, yMassTemplate)
         {
             _functionProvider = functionProvider;
-            _xMassTemplate = xMassTemplate;
-            _yMassTemplate = yMassTemplate;
         }
 
         public LocalVector Assemble(Element element)
         {
-            
             var localVector = GetFunctionVector(element.NodeIndexes);
             var masses = GetDefaultMasses();
 
@@ -33,38 +27,17 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
         private Vector GetFunctionVector(int[] nodeIndexes)
         {
-            var result = new double[NodesInElement];
+            var result = new double[LocalSize];
             
-            for (var i = 0; i < NodesInElement; i++)
+            for (var i = 0; i < LocalSize; i++)
                 result[i] = _functionProvider.Calc(nodeIndexes[i]);
 
             return new Vector(result);
-        }
-
-        private Matrix GetDefaultMasses()
-        {
-            var masses = new double[NodesInElement, NodesInElement];
-
-            for (int i = 0; i < NodesInElement; i++)
-            {
-                for (int j = 0; j < NodesInElement; j++)
-                {
-                    masses[i, j] =
-                        _xMassTemplate[IndexFromX(i), IndexFromX(j)] *
-                        _yMassTemplate[IndexFromY(i), IndexFromY(j)];
-                }
-            }
-
-            return new Matrix(masses);
         }
 
         private static LocalVector AttachIndexes(int[] indexes, Vector vector)
         {
             return new LocalVector(vector, new IndexPermutation(indexes));
         }
-
-        private static int IndexFromX(int i) => i % 4;
-
-        private static int IndexFromY(int i) => i / 4;
     }
 }

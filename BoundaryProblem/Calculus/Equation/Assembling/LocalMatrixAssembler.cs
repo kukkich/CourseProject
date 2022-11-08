@@ -4,12 +4,9 @@ using BoundaryProblem.DataStructures;
 
 namespace BoundaryProblem.Calculus.Equation.Assembling
 {
-    public class LocalMatrixAssembler
+    public class LocalMatrixAssembler : LocalAssembler
     {
-        private const int LocalMatrixSize = (Element.STEPS_INSIDE_ELEMENT + 1) * (Element.STEPS_INSIDE_ELEMENT + 1);
         private readonly IMaterialProvider _materialProvider;
-        private readonly Matrix _xMassTemplate;
-        private readonly Matrix _yMassTemplate;
         private readonly Matrix _xStiffnessTemplate;
         private readonly Matrix _yStiffnessTemplate;
 
@@ -17,11 +14,9 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             IMaterialProvider materialProvider,
             Matrix xMassTemplate, Matrix yMassTemplate,
             Matrix xStiffnessTemplate, Matrix yStiffnessTemplate
-        )
+        ) : base(xMassTemplate, yMassTemplate)
         {
             _materialProvider = materialProvider;
-            _xMassTemplate = xMassTemplate;
-            _yMassTemplate = yMassTemplate;
             _xStiffnessTemplate = xStiffnessTemplate;
             _yStiffnessTemplate = yStiffnessTemplate;
         }
@@ -45,34 +40,21 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
         private (Matrix stiffness, Matrix masses) GetMassesAndStiffnessMatrix(Material material)
         {
-            var stiffness = new double[LocalMatrixSize, LocalMatrixSize];
-            var masses = new double[LocalMatrixSize, LocalMatrixSize];
+            var stiffnessValues = new double[LocalSize, LocalSize];
+            var masses = GetDefaultMasses();
 
-            for (int i = 0; i < LocalMatrixSize; i++)
-            {
-                for (int j = 0; j < LocalMatrixSize; j++)
-                {
-                    stiffness[i, j] =
+            for (int i = 0; i < LocalSize; i++)
+                for (int j = 0; j < LocalSize; j++)
+                    stiffnessValues[i, j] =
                         material.Lambda * (
                             _xStiffnessTemplate[IndexFromX(i), IndexFromX(j)] *
-                            _yMassTemplate[IndexFromY(i), IndexFromY(j)]
+                            YMassTemplate[IndexFromY(i), IndexFromY(j)]
                             +
-                            _xMassTemplate[IndexFromX(i), IndexFromX(j)] *
+                            XMassTemplate[IndexFromX(i), IndexFromX(j)] *
                             _yStiffnessTemplate[IndexFromY(i), IndexFromY(j)]
                         );
 
-                    masses[i, j] =
-                        material.Gamma *
-                        _xMassTemplate[IndexFromX(i), IndexFromX(j)] *
-                        _yMassTemplate[IndexFromY(i), IndexFromY(j)];
-                }
-            }
-
-            return (new Matrix(stiffness), new Matrix(masses));
+            return (new Matrix(stiffnessValues), masses * material.Gamma);
         }
-
-        private static int IndexFromX(int i) => i % 4;
-
-        private static int IndexFromY(int i) => i / 4;
     }
 }

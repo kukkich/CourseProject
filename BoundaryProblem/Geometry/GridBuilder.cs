@@ -12,7 +12,7 @@ namespace BoundaryProblem.Geometry
 
         public GridBuilder(Rectangle area)
         {
-            _stepsInsideElement = Element.STEPS_INSIDE_ELEMENT;
+            _stepsInsideElement = Element.StepsInsideElement;
             _area = area;
         }
 
