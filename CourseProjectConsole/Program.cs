@@ -8,7 +8,7 @@ namespace CourseProjectConsole
         {
             Matrix matrix = new(new double[,] { { 1, 2, 3, 322 }, { 4, 5, 6, 1488 }, { 900, 10, -42, 12 } });
 
-            Console.WriteLine(matrix.RowLength);
+            Console.WriteLine(matrix.Length);
 
             Console.WriteLine("Hello, World!");
             for (int i = 0; i < 16; i++)

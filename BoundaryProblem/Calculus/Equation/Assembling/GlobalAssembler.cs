@@ -1,17 +1,16 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
+using BoundaryProblem.DataStructures;
+using BoundaryProblem.DataStructures.DensityFunction;
 using BoundaryProblem.Geometry;
 
 namespace BoundaryProblem.Calculus.Equation.Assembling
 {
+    // TODO не протестирован
     public class GlobalAssembler
     {
         private static readonly double[,] DefaultStiffnessMatrix;
         private static readonly double[,] DefaultMassMatrix;
 
-        private readonly Matrix _xStiffnessMatrix;
-        private readonly Matrix _yStiffnessMatrix;
-        private readonly Matrix _xMassMatrix;
-        private readonly Matrix _yMassMatrix;
         private readonly Grid _grid;
         private readonly MatrixInserter _matrixInserter;
         private readonly LocalMatrixAssembler _localMatrixAssembler;
@@ -34,18 +33,29 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
                 { 19, -36, 99, 128 }
             };
         }
-
-        public GlobalAssembler(Grid grid, MatrixInserter matrixInserter, LocalMatrixAssembler localMatrixAssembler)
+        
+        public GlobalAssembler(
+            Grid grid,
+            IMaterialProvider materialProvider,
+            IDensityFunctionProvider functionProvider,
+            MatrixInserter matrixInserter)
         {
             _grid = grid;
+
             _matrixInserter = matrixInserter;
-            _localMatrixAssembler = localMatrixAssembler;
 
-            _xStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.X));
-            _yStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.Y));
+            var xStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.X));
+            var yStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.Y));
 
-            _xMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.X / 1680.0d);
-            _yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
+            var xMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.X / 1680.0d);
+            var yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
+
+            _localMatrixAssembler = new LocalMatrixAssembler(materialProvider,
+                xMassTemplate: xMassMatrix, 
+                yMassTemplate: yMassMatrix, 
+                xStiffnessTemplate: xStiffnessMatrix,
+                yStiffnessTemplate: yStiffnessMatrix
+                );
         }
 
         public void BuildMatrix()

@@ -32,9 +32,14 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
             var (stiffness, masses) = GetMassesAndStiffnessMatrix(material);
 
+            return AttachIndexes(element.NodeIndexes, stiffness + masses);
+        }
+
+        private static LocalMatrix AttachIndexes(int[] indexes, Matrix matrix)
+        {
             return new LocalMatrix(
-                stiffness + masses,
-                new IndexPermutation(element.NodeIndexes)
+                matrix,
+                new IndexPermutation(indexes)
             );
         }
 

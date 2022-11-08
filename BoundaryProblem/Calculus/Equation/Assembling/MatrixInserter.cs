@@ -18,9 +18,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
                     var column = localMatrix.IndexPermutation
                         .ApplyPermutation(j);
                     if (column > row) continue;
-
-                    //throw new NotImplementedException();
-                    // Сделать, чтобы элементы прибавлялись, а не приравнивались
+                    
                     sparseMatrix[row, column] += localMatrix[i, j];
                 }
             }

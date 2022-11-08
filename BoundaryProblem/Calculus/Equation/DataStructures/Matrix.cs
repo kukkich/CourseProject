@@ -3,7 +3,7 @@
     public class Matrix
     {
         public virtual double this[int x, int y] => _values[x, y] * _coefficient;
-        public int RowLength => _values.GetLength(0);
+        public int Length => _values.GetLength(0);
 
         private readonly double[,] _values;
         private readonly double _coefficient;
@@ -27,12 +27,12 @@
 
         public static Matrix operator +(Matrix a, Matrix b)
         {
-            if (a.RowLength != b.RowLength) throw new ArgumentException();
+            if (a.Length != b.Length) throw new ArgumentException();
 
-            var values = new double[a.RowLength, a.RowLength];
+            var values = new double[a.Length, a.Length];
             
-            for (int i = 0; i < a.RowLength; i++)
-                for (int j = 0; j < a.RowLength; j++)
+            for (int i = 0; i < a.Length; i++)
+                for (int j = 0; j < a.Length; j++)
                     values[i, j] = a[i, j] + b[i, j];
 
             return new Matrix(values);

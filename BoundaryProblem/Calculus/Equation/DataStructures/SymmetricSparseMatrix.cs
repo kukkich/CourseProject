@@ -19,6 +19,7 @@
             }
         }
 
+        // TODO Протестировать
         public ref double this[int rowIndex, int columnIndex]
         {
             get
@@ -50,10 +51,6 @@
                 throw new IndexOutOfRangeException();
             }
         }
-
-
-
-
 
         public ReadOnlySpan<int> RowIndexes => new(_rowIndexes);
         public ReadOnlySpan<int> ColumnIndexes => new(_columnIndexes);

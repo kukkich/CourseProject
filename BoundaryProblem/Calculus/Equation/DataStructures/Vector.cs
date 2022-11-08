@@ -2,6 +2,17 @@
 {
     public class Vector
     {
+        public static Vector operator *(Vector vector, Matrix matrix)
+        {
+            var result = new double[vector.Length];
+
+            for (int i = 0; i < vector.Length; i++)
+            for (int j = 0; j < vector.Length; j++)
+                result[i] += matrix[i, j] * vector[j];
+
+            return new Vector(result);
+        }
+
         public virtual double this[int x]
         {
             get => _values[x];

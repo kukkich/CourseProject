@@ -25,6 +25,7 @@ namespace CourseProject.Tests.Calculus.Equation.Assembling.LocalAssembling
 
         [TestCase(1, 2, 3, 4, 5, 6)]
         [TestCase(6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 29)]
+
         public void CorrectValuesTest(params int[] permutation)
         {
             var expectedPermutation = new IndexPermutation(permutation);
