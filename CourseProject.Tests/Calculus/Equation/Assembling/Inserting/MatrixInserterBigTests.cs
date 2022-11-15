@@ -2,65 +2,64 @@
 using BoundaryProblem.Calculus.Equation.Assembling;
 using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 
-namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting
+namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting;
+
+internal class MatrixInserterBigTests
 {
-    internal class MatrixInserterBigTests
+    private SymmetricSparseMatrix _sparseMatrix;
+    private MatrixInserter _inserter;
+
+    [SetUp]
+    public void Setup()
     {
-        private SymmetricSparseMatrix _sparseMatrix;
-        private MatrixInserter _inserter;
-
-        [SetUp]
-        public void Setup()
-        {
-            _inserter = new MatrixInserter();
-            _sparseMatrix = new SymmetricSparseMatrix(
-                new[] { 0, 0, 2, 4, 7, 12, 17, 21 },
-                new[]
-                {
-                    0, 1,
-                    0, 1,
-                    1, 2, 3,
-                    0, 1, 2, 3, 4,
-                    1, 2, 3, 4, 5,
-                    1, 2, 3, 4
-                }
-            );
-        }
-
-        [Test]
-        public void TestInsert_3x3Symmetric()
-        {
-            Matrix squareMatrix = new(new double[,]
+        _inserter = new MatrixInserter();
+        _sparseMatrix = new SymmetricSparseMatrix(
+            new[] { 0, 0, 2, 4, 7, 12, 17, 21 },
+            new[]
             {
-                { 3, 8, 3 },
-                { 8, 1, 16 },
-                { 3, 16, 2 }
-            });
+                0, 1,
+                0, 1,
+                1, 2, 3,
+                0, 1, 2, 3, 4,
+                1, 2, 3, 4, 5,
+                1, 2, 3, 4
+            }
+        );
+    }
 
-            LocalMatrix localMatrix = new(
-                squareMatrix,
-                new IndexPermutation(new[] { 4, 5, 6 })
-            );
+    [Test]
+    public void TestInsert_3x3Symmetric()
+    {
+        Matrix squareMatrix = new(new double[,]
+        {
+            { 3, 8, 3 },
+            { 8, 1, 16 },
+            { 3, 16, 2 }
+        });
 
-            _inserter.Insert(_sparseMatrix, localMatrix);
+        LocalMatrix localMatrix = new(
+            squareMatrix,
+            new IndexPermutation(new[] { 4, 5, 6 })
+        );
 
-            var expectedDiagonal = new double[] { 0, 0, 0, 0, 3, 1, 2, 0 };
-            Assert.Multiple(() =>
-            {
-                Assert.That(_sparseMatrix.Diagonal
-                        .SequenceEqual(expectedDiagonal),
-                    Is.True);
+        _inserter.Insert(_sparseMatrix, localMatrix);
 
-                Assert.That(_sparseMatrix[4].Select(iv => iv.Value)
-                        .SequenceEqual(new double[] { 0, 0, 0 }),
-                    Is.True);
-                Assert.That(_sparseMatrix[5].Select(iv => iv.Value)
-                        .SequenceEqual(new double[] { 0, 0, 0, 0, 8 }),
-                    Is.True);
-                Assert.That(_sparseMatrix[6].Select(iv => iv.Value)
-                        .SequenceEqual(new double[] { 0, 0, 0, 3, 16 }),
-                    Is.True);
-            });
-        }
+        var expectedDiagonal = new double[] { 0, 0, 0, 0, 3, 1, 2, 0 };
+        Assert.Multiple(() =>
+        {
+            Assert.That(_sparseMatrix.Diagonal
+                    .SequenceEqual(expectedDiagonal),
+                Is.True);
+
+            Assert.That(_sparseMatrix[4].Select(iv => iv.Value)
+                    .SequenceEqual(new double[] { 0, 0, 0 }),
+                Is.True);
+            Assert.That(_sparseMatrix[5].Select(iv => iv.Value)
+                    .SequenceEqual(new double[] { 0, 0, 0, 0, 8 }),
+                Is.True);
+            Assert.That(_sparseMatrix[6].Select(iv => iv.Value)
+                    .SequenceEqual(new double[] { 0, 0, 0, 3, 16 }),
+                Is.True);
+        });
     }
 }

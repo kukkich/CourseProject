@@ -87,6 +87,8 @@
             _columnIndexes = columnIndexes.ToArray();
             Diagonal = new double[_rowIndexes.Length];
             Values = new double[_columnIndexes.Length];
+
+            
         }
 
     }

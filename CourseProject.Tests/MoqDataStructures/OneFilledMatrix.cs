@@ -2,24 +2,24 @@
 
 namespace CourseProject.Tests.MoqDataStructures;
 
-internal class ZeroMatrix : Matrix
+internal class OneFilledMatrix : Matrix
 {
     private const int Size = 16;
     private static readonly double[,] IdentityValues;
 
-    static ZeroMatrix()
+    static OneFilledMatrix()
     {
         IdentityValues = new double[Size, Size];
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)
             {
-                IdentityValues[i, j] = 0;
+                IdentityValues[i, j] = 1;
             }
         }
     }
 
-    public ZeroMatrix()
-        : base(IdentityValues, 0)
+    public OneFilledMatrix()
+        : base(IdentityValues)
     { }
 }

@@ -1,4 +1,5 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
+using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 using BoundaryProblem.DataStructures;
 using BoundaryProblem.DataStructures.DensityFunction;
 using BoundaryProblem.Geometry;
@@ -12,8 +13,11 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
         private static readonly double[,] DefaultMassMatrix;
 
         private readonly Grid _grid;
-        private readonly MatrixInserter _matrixInserter;
+        private readonly PortraitBuilder _portraitBuilder;
         private readonly LocalMatrixAssembler _localMatrixAssembler;
+        private readonly LocalRightSideAssembler _localRightSideAssembler;
+        private readonly VectorInserter _vectorInserter;
+        private readonly MatrixInserter _matrixInserter;
 
         static GlobalAssembler()
         {
@@ -38,37 +42,72 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             Grid grid,
             IMaterialProvider materialProvider,
             IDensityFunctionProvider functionProvider,
-            MatrixInserter matrixInserter)
+            MatrixInserter matrixInserter,
+            VectorInserter vectorInserter
+        )
         {
             _grid = grid;
+            _portraitBuilder = new PortraitBuilder();
 
             _matrixInserter = matrixInserter;
+            _vectorInserter = vectorInserter;
 
-            var xStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.X));
-            var yStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.Y));
+            GetTemplateMatrices(
+                out var xStiffnessMatrix, 
+                out var yStiffnessMatrix, 
+                out var xMassMatrix,
+                out var yMassMatrix
+            );
 
-            var xMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.X / 1680.0d);
-            var yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
-
-            _localMatrixAssembler = new LocalMatrixAssembler(materialProvider,
+            _localMatrixAssembler = new LocalMatrixAssembler(
+                materialProvider,
                 xMassTemplate: xMassMatrix, 
                 yMassTemplate: yMassMatrix, 
                 xStiffnessTemplate: xStiffnessMatrix,
                 yStiffnessTemplate: yStiffnessMatrix
-                );
+            );
+
+            _localRightSideAssembler = new LocalRightSideAssembler(
+                functionProvider,
+                xMassTemplate: xMassMatrix,
+                yMassTemplate: yMassMatrix
+            );
         }
 
-        public void BuildMatrix()
+        private void GetTemplateMatrices(out Matrix xStiffnessMatrix, out Matrix yStiffnessMatrix, out Matrix xMassMatrix, out Matrix yMassMatrix)
         {
+            xStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.X));
+            yStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.Y));
+
+            xMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.X / 1680.0d);
+            yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
+        }
+
+        public Equation BuildEquation()
+        {
+            SymmetricSparseMatrix globalMatrix = BuildPortrait();
+            Vector rightSide = new (new double[globalMatrix.RowIndexes.Length]);
+            Equation equation = new (
+                Matrix: globalMatrix,
+                Solution: new Vector(new double[globalMatrix.RowIndexes.Length]),
+                RightSide: new Vector(new double[globalMatrix.RowIndexes.Length])
+            );
+
             foreach (var element in _grid.Elements)
             {
-
+                var localMatrix = _localMatrixAssembler.Assemble(element);
+                var localRightSide = _localRightSideAssembler.Assemble(element);
+                
+                _matrixInserter.Insert(equation.Matrix, localMatrix);
+                _vectorInserter.Insert(equation.RightSide, localRightSide);
             }
 
-            throw new NotImplementedException();
+            return equation;
         }
 
-        public void ApplyBoundaryConditions()
+        private SymmetricSparseMatrix BuildPortrait() => _portraitBuilder.Build(_grid);
+
+        public void ApplyBoundaryConditions(Equation equation)
         {
             throw new NotImplementedException();
         }

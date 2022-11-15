@@ -6,20 +6,21 @@ namespace CourseProjectConsole
     {
         static void Main(string[] args)
         {
-            Matrix matrix = new(new double[,] { { 1, 2, 3, 322 }, { 4, 5, 6, 1488 }, { 900, 10, -42, 12 } });
+            int[] indexes = {0, 1, 0, 1, 3, 2};
+            double[] values = {0, 1, 2, 3, 4, 5,};
 
-            Console.WriteLine(matrix.Length);
+            var x = new SparseMatrixRow(
+                new ReadOnlySpan<int>(indexes, 2, 3),
+                new Span<double>(values, 2, 3),
+                2
+            );
 
-            Console.WriteLine("Hello, World!");
-            for (int i = 0; i < 16; i++)
+            foreach (RefIndexValue indexValue in x)
             {
-                Console.Write(i);
-                Console.Write(": [");
-                Console.Write(Mu(i));
-                Console.Write(", ");
-                Console.Write(Nu(i));
-                Console.WriteLine("]");
+                indexValue.SetValue(0);
             }
+
+            Console.ReadLine();
         }
 
         private static int Mu(int i) => i % 4;
