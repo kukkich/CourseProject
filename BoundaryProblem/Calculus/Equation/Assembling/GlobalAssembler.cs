@@ -1,6 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 using BoundaryProblem.DataStructures;
+using BoundaryProblem.DataStructures.BoundaryConditions.Second;
 using BoundaryProblem.DataStructures.DensityFunction;
 using BoundaryProblem.Geometry;
 
@@ -18,6 +19,9 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
         private readonly LocalRightSideAssembler _localRightSideAssembler;
         private readonly VectorInserter _vectorInserter;
         private readonly MatrixInserter _matrixInserter;
+
+        public Matrix XMassMatrix { get; set; }
+        public Matrix YMassMatrix { get; set; }
 
         static GlobalAssembler()
         {
@@ -37,32 +41,31 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
                 { 19, -36, 99, 128 }
             };
         }
-        
+
         public GlobalAssembler(
             Grid grid,
             IMaterialProvider materialProvider,
-            IDensityFunctionProvider functionProvider,
-            MatrixInserter matrixInserter,
-            VectorInserter vectorInserter
+            IDensityFunctionProvider functionProvider
         )
         {
             _grid = grid;
             _portraitBuilder = new PortraitBuilder();
-
-            _matrixInserter = matrixInserter;
-            _vectorInserter = vectorInserter;
+            _matrixInserter = new MatrixInserter();
+            _vectorInserter = new VectorInserter();
 
             GetTemplateMatrices(
-                out var xStiffnessMatrix, 
-                out var yStiffnessMatrix, 
+                out var xStiffnessMatrix,
+                out var yStiffnessMatrix,
                 out var xMassMatrix,
                 out var yMassMatrix
             );
+            YMassMatrix = yMassMatrix;
+            XMassMatrix = xMassMatrix;
 
             _localMatrixAssembler = new LocalMatrixAssembler(
                 materialProvider,
-                xMassTemplate: xMassMatrix, 
-                yMassTemplate: yMassMatrix, 
+                xMassTemplate: xMassMatrix,
+                yMassTemplate: yMassMatrix,
                 xStiffnessTemplate: xStiffnessMatrix,
                 yStiffnessTemplate: yStiffnessMatrix
             );
@@ -83,11 +86,10 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             yMassMatrix = new Matrix(DefaultMassMatrix) * (_grid.ElementLength.Y / 1680.0d);
         }
 
-        public Equation BuildEquation()
+        public EquationData BuildEquation()
         {
             SymmetricSparseMatrix globalMatrix = BuildPortrait();
-            Vector rightSide = new (new double[globalMatrix.RowIndexes.Length]);
-            Equation equation = new (
+            EquationData equation = new(
                 Matrix: globalMatrix,
                 Solution: new Vector(new double[globalMatrix.RowIndexes.Length]),
                 RightSide: new Vector(new double[globalMatrix.RowIndexes.Length])
@@ -97,7 +99,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             {
                 var localMatrix = _localMatrixAssembler.Assemble(element);
                 var localRightSide = _localRightSideAssembler.Assemble(element);
-                
+
                 _matrixInserter.Insert(equation.Matrix, localMatrix);
                 _vectorInserter.Insert(equation.RightSide, localRightSide);
             }
@@ -107,7 +109,42 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
         private SymmetricSparseMatrix BuildPortrait() => _portraitBuilder.Build(_grid);
 
-        public void ApplyBoundaryConditions(Equation equation)
+        public void ApplyThirdBoundaryConditions(EquationData equation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ApplySecondBoundaryConditions(EquationData equation, SecondBoundaryProvider secondCondition)
+        {
+            foreach (var conditionsUnit in secondCondition.FlowConditions)
+            {
+                var massMatrix = conditionsUnit.Bound switch
+                {
+                    Bound.Right or Bound.Left => YMassMatrix,
+                    Bound.Top or Bound.Bottom => XMassMatrix,
+                    _ => throw new ArgumentException(String.Empty, nameof(secondCondition))
+                };
+
+                Element element = _grid.Elements[conditionsUnit.ElementId];
+                var omegaVector = new Vector(new[]
+                {
+                    conditionsUnit.Thetta,
+                    conditionsUnit.Thetta,
+                    conditionsUnit.Thetta,
+                    conditionsUnit.Thetta
+                });
+
+                var boundNodeIndexes = element.GetBoundNodeIndexes(conditionsUnit.Bound);
+                LocalVector localVector = new(
+                    omegaVector * massMatrix,
+                    new IndexPermutation(boundNodeIndexes)
+                    );
+
+                _vectorInserter.Insert(equation.RightSide, localVector);
+            }
+        }
+
+        public void ApplyFirstBoundaryConditions(EquationData equation)
         {
             throw new NotImplementedException();
         }

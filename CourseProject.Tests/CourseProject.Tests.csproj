@@ -20,4 +20,8 @@
     <ProjectReference Include="..\BoundaryProblem\BoundaryProblem.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Asserts\" />
+  </ItemGroup>
+
 </Project>

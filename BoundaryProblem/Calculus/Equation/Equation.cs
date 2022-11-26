@@ -2,4 +2,4 @@
 
 namespace BoundaryProblem.Calculus.Equation;
 
-public record Equation(SymmetricSparseMatrix Matrix, Vector Solution, Vector RightSide);
+public record EquationData(SymmetricSparseMatrix Matrix, Vector Solution, Vector RightSide);

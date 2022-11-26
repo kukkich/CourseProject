@@ -36,7 +36,7 @@
             _values = values;
         }
 
-        public Enumerator GetEnumerator() => new (_columnIndexes, _values);
+        public Enumerator   GetEnumerator() => new (_columnIndexes, _values);
 
         public ref struct Enumerator
         {
@@ -66,6 +66,5 @@
 
             public RefIndexValue Current => new (_columnIndexes[_index], _values, _index);
         }
-
     }
 }

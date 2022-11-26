@@ -5,7 +5,7 @@ namespace BoundaryProblem.Geometry
     public class Grid
     {
         public IEnumerable<Point2D> Nodes { get; }
-        public IEnumerable<Element> Elements { get; }
+        public Element[] Elements { get; }
         public Point2D ElementLength { get; }
         public Point2D DistanceBetweenNodes => ElementLength / Element.StepsInsideElement;
 
