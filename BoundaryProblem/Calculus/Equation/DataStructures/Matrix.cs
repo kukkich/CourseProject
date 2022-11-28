@@ -24,7 +24,10 @@
         {
             return new Matrix(matrix._values, matrix._coefficient * coefficient);
         }
-
+        public static Matrix operator *(double coefficient, Matrix matrix)
+        {
+            return matrix * coefficient;
+        }
         public static Matrix operator +(Matrix a, Matrix b)
         {
             if (a.Length != b.Length) throw new ArgumentException();

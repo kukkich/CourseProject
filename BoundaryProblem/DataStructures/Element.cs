@@ -3,7 +3,8 @@
 public readonly record struct Element(int[] NodeIndexes, int MaterialId = 0)
 {
     public const int StepsInsideElement = 3;
-    public const int NodesInElement = (StepsInsideElement + 1) * (StepsInsideElement + 1);
+    public const int NodesOnBound = StepsInsideElement + 1;
+    public const int NodesInElement = NodesOnBound * NodesOnBound;
 
     public int[] GetBoundNodeIndexes(Bound bound) =>
         bound switch

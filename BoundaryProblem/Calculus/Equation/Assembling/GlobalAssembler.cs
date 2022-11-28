@@ -1,7 +1,9 @@
 ﻿using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 using BoundaryProblem.DataStructures;
+using BoundaryProblem.DataStructures.BoundaryConditions;
 using BoundaryProblem.DataStructures.BoundaryConditions.Second;
+using BoundaryProblem.DataStructures.BoundaryConditions.Third;
 using BoundaryProblem.DataStructures.DensityFunction;
 using BoundaryProblem.Geometry;
 
@@ -77,7 +79,10 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             );
         }
 
-        private void GetTemplateMatrices(out Matrix xStiffnessMatrix, out Matrix yStiffnessMatrix, out Matrix xMassMatrix, out Matrix yMassMatrix)
+        private void GetTemplateMatrices(
+            out Matrix xStiffnessMatrix, out Matrix yStiffnessMatrix, 
+            out Matrix xMassMatrix, out Matrix yMassMatrix
+            )
         {
             xStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.X));
             yStiffnessMatrix = new Matrix(DefaultStiffnessMatrix) * (1 / (40.0d * _grid.ElementLength.Y));
@@ -109,39 +114,69 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
         private SymmetricSparseMatrix BuildPortrait() => _portraitBuilder.Build(_grid);
 
-        public void ApplyThirdBoundaryConditions(EquationData equation)
+        public void ApplyThirdBoundaryConditions(EquationData equation, ThirdBoundaryProvider condition)
         {
+            foreach (var flowExchangeCondition in condition.FlowExchangeConditions)
+            {
+                var massMatrix = GetMassMatrixForBound(flowExchangeCondition.Bound);
+                Element element = _grid.Elements[flowExchangeCondition.ElementId];
+                var boundNodeIndexes = element.GetBoundNodeIndexes(flowExchangeCondition.Bound);
+
+                //TODO переименовать маст хэв
+                var A_S3 = flowExchangeCondition.Betta * massMatrix;
+                var environmentVector = Vector.Create(Element.NodesOnBound, flowExchangeCondition.Environment);
+                var b_S3 = A_S3 * environmentVector;
+
+                var localVector = new LocalVector(
+                    b_S3,
+                    new IndexPermutation(boundNodeIndexes)
+                    );
+                var localMatrix = new LocalMatrix(
+                    A_S3, 
+                    new IndexPermutation(boundNodeIndexes)
+                    );
+
+                _vectorInserter.Insert(equation.RightSide, localVector);
+                _matrixInserter.Insert(equation.Matrix, localMatrix);
+                // A_S3 = ...
+                // b_S3 = A_S3 * Vector.Create(Element.NodesOnBound, flowCondition.Environment);
+
+                // Create Local Objects (matrix A and vector B)
+                // Insert Local Objects
+
+                // have fun!
+            }
+
             throw new NotImplementedException();
         }
 
-        public void ApplySecondBoundaryConditions(EquationData equation, SecondBoundaryProvider secondCondition)
+        public void ApplySecondBoundaryConditions(EquationData equation, SecondBoundaryProvider condition)
         {
-            foreach (var conditionsUnit in secondCondition.FlowConditions)
+            foreach (var flowCondition in condition.FlowConditions)
             {
-                var massMatrix = conditionsUnit.Bound switch
-                {
-                    Bound.Right or Bound.Left => YMassMatrix,
-                    Bound.Top or Bound.Bottom => XMassMatrix,
-                    _ => throw new ArgumentException(String.Empty, nameof(secondCondition))
-                };
+                var massMatrix = GetMassMatrixForBound(flowCondition.Bound);
 
-                Element element = _grid.Elements[conditionsUnit.ElementId];
-                var omegaVector = new Vector(new[]
-                {
-                    conditionsUnit.Thetta,
-                    conditionsUnit.Thetta,
-                    conditionsUnit.Thetta,
-                    conditionsUnit.Thetta
-                });
+                Element element = _grid.Elements[flowCondition.ElementId];
+                var thettaVector = Vector.Create(Element.NodesOnBound, flowCondition.Thetta);
 
-                var boundNodeIndexes = element.GetBoundNodeIndexes(conditionsUnit.Bound);
+                var boundNodeIndexes = element.GetBoundNodeIndexes(flowCondition.Bound);
                 LocalVector localVector = new(
-                    omegaVector * massMatrix,
+                    thettaVector * massMatrix,
                     new IndexPermutation(boundNodeIndexes)
                     );
 
                 _vectorInserter.Insert(equation.RightSide, localVector);
             }
+        }
+
+        private Matrix GetMassMatrixForBound(Bound bound)
+        {
+            return bound switch
+            {
+                Bound.Right or Bound.Left => YMassMatrix,
+                Bound.Top or Bound.Bottom => XMassMatrix,
+                _ => throw new ArgumentException(String.Empty, nameof(bound))
+            };
         }
 
         public void ApplyFirstBoundaryConditions(EquationData equation)
