@@ -28,7 +28,7 @@
         public int Index { get; }
         private readonly ReadOnlySpan<int> _columnIndexes;
         private readonly Span<double> _values;
-
+        
         public SparseMatrixRow(ReadOnlySpan<int> columnIndexes, Span<double> values, int index)
         {
             Index = index;
@@ -36,7 +36,7 @@
             _values = values;
         }
 
-        public Enumerator   GetEnumerator() => new (_columnIndexes, _values);
+        public Enumerator GetEnumerator() => new (_columnIndexes, _values);
 
         public ref struct Enumerator
         {

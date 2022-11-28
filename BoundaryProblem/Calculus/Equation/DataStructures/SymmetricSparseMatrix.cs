@@ -2,7 +2,24 @@
 {
     public class SymmetricSparseMatrix
     {
-        public IEnumerable<IndexValue> this[int rowIndex] 
+        //public IEnumerable<IndexValue> this[int rowIndex] 
+        //{
+        //    get
+        //    {
+        //        if (rowIndex < 0) throw new ArgumentOutOfRangeException(nameof(rowIndex));
+
+        //        var end = _rowIndexes[rowIndex];
+
+        //        var begin = rowIndex == 0
+        //            ? 0
+        //            : _rowIndexes[rowIndex - 1];
+
+        //        for (var i = begin; i < end; i++)
+        //            yield return new IndexValue(_columnIndexes[i], Values[i], i);
+        //    }
+        //}
+
+        public SparseMatrixRow this[int rowIndex]
         {
             get
             {
@@ -13,9 +30,13 @@
                 var begin = rowIndex == 0
                     ? 0
                     : _rowIndexes[rowIndex - 1];
+                var length = end - begin;
 
-                for (var i = begin; i < end; i++)
-                    yield return new IndexValue(_columnIndexes[i], Values[i], i);
+                return new SparseMatrixRow(
+                    new ReadOnlySpan<int>(_columnIndexes, begin, length),
+                    new Span<double>(Values, begin, length),
+                    rowIndex
+                );
             }
         }
 
@@ -87,8 +108,6 @@
             _columnIndexes = columnIndexes.ToArray();
             Diagonal = new double[_rowIndexes.Length];
             Values = new double[_columnIndexes.Length];
-
-            
         }
 
     }

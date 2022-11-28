@@ -1,6 +1,7 @@
 ﻿using BoundaryProblem.Calculus.Equation.Assembling;
 using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
+using CourseProject.Tests.Asserts;
 
 namespace CourseProject.Tests.Calculus.Equation.Assembling.Inserting;
 
@@ -42,10 +43,11 @@ internal class MatrixInserterSymmetric2X2Tests
             Assert.That(_sparseMatrix.Diagonal
                     .SequenceEqual(expectedDiagonal),
                 Is.True);
+            SparseMatrixAssert.RowEqual(_sparseMatrix[1], expectedFirstRow);
 
-            Assert.That(_sparseMatrix[1].Select(iv => iv.Value)
-                    .SequenceEqual(expectedFirstRow),
-                Is.True);
+            //Assert.That(_sparseMatrix[1].Select(iv => iv.Value)
+            //        .SequenceEqual(expectedFirstRow),
+            //    Is.True);
         });
     }
 
@@ -75,12 +77,15 @@ internal class MatrixInserterSymmetric2X2Tests
                     .SequenceEqual(expectedDiagonal),
                 Is.True);
 
-            Assert.That(_sparseMatrix[2].Select(iv => iv.Value)
-                    .SequenceEqual(expectedSecondRow),
-                Is.True);
-            Assert.That(_sparseMatrix[4].Select(iv => iv.Value)
-                    .SequenceEqual(expectedFourthRow),
-                Is.True);
+            SparseMatrixAssert.RowEqual(_sparseMatrix[2], expectedSecondRow);
+            SparseMatrixAssert.RowEqual(_sparseMatrix[4], expectedFourthRow);
+
+            //Assert.That(_sparseMatrix[2].Select(iv => iv.Value)
+            //        .SequenceEqual(expectedSecondRow),
+            //    Is.True);
+            //Assert.That(_sparseMatrix[4].Select(iv => iv.Value)
+            //        .SequenceEqual(expectedFourthRow),
+            //    Is.True);
         });
     }
 }
