@@ -1,8 +1,5 @@
 ﻿using BoundaryProblem.Calculus.Equation.Assembling;
 using BoundaryProblem.Calculus.Equation.DataStructures;
-using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
-using BoundaryProblem.DataStructures;
-using BoundaryProblem.DataStructures.DensityFunction;
 
 namespace CourseProjectConsole
 {
@@ -32,6 +29,9 @@ namespace CourseProjectConsole
 
         static void Main(string[] args)
         {
+            var x = new Span<int>(new int[] { 1, 2, 5, 5, 5, 6, 7, 9, 9, 13, 23});
+            var z = x.BinarySearch(8);
+
             Console.ReadLine();
         }
 

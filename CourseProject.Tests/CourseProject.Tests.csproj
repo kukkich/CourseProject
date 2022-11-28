@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Asserts\" />
+    <Folder Include="Calculus\Equation\Assembling\Excluding\" />
   </ItemGroup>
 
 </Project>

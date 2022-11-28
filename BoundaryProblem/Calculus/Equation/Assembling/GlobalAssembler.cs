@@ -1,7 +1,7 @@
-﻿using BoundaryProblem.Calculus.Equation.DataStructures;
+﻿using BoundaryProblem.Calculus.Equation.Assembling.Algorithms;
+using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 using BoundaryProblem.DataStructures;
-using BoundaryProblem.DataStructures.BoundaryConditions;
 using BoundaryProblem.DataStructures.BoundaryConditions.Second;
 using BoundaryProblem.DataStructures.BoundaryConditions.Third;
 using BoundaryProblem.DataStructures.DensityFunction;
@@ -80,7 +80,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
         }
 
         private void GetTemplateMatrices(
-            out Matrix xStiffnessMatrix, out Matrix yStiffnessMatrix, 
+            out Matrix xStiffnessMatrix, out Matrix yStiffnessMatrix,
             out Matrix xMassMatrix, out Matrix yMassMatrix
             )
         {
@@ -132,7 +132,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
                     new IndexPermutation(boundNodeIndexes)
                     );
                 var localMatrix = new LocalMatrix(
-                    A_S3, 
+                    A_S3,
                     new IndexPermutation(boundNodeIndexes)
                     );
 
@@ -175,7 +175,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             {
                 Bound.Right or Bound.Left => YMassMatrix,
                 Bound.Top or Bound.Bottom => XMassMatrix,
-                _ => throw new ArgumentException(String.Empty, nameof(bound))
+                _ => throw new ArgumentException(string.Empty, nameof(bound))
             };
         }
 

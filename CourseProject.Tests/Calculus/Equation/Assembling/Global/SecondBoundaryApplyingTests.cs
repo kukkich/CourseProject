@@ -1,5 +1,6 @@
 ﻿using BoundaryProblem.Calculus.Equation;
 using BoundaryProblem.Calculus.Equation.Assembling;
+using BoundaryProblem.Calculus.Equation.Assembling.Algorithms;
 using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.DataStructures;
 using BoundaryProblem.DataStructures.BoundaryConditions;
