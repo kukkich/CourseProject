@@ -2,8 +2,36 @@
 
 public record SecondBoundaryProvider(params FlowUnit[] FlowConditions)
 {
-    public static SecondBoundaryProvider Serialize()
+    public static SecondBoundaryProvider Deserialize(ProblemFilePathsProvider filesProvider)
     {
-        throw new NotImplementedException();
+        using var stream = new StreamReader(filesProvider.SecondBoundary);
+        List<FlowUnit> units = new();
+
+        while (true)
+        {
+            var line = stream.ReadLine();
+            if (String.IsNullOrEmpty(line)) break;
+
+            var values = line.Split(' ');
+            if (Enum.GetValues<Bound>()
+                .Select(x => (int)x)
+                .All(x => x != int.Parse(values[1]))
+               )
+            {
+                throw new FormatException(
+                    "Third boundary file contains wrong bound index.\n" +
+                    $"String was: \"{line}\""
+                );
+            }
+
+            units.Add(
+                new FlowUnit(
+                    ElementId: int.Parse(values[0]),
+                    Bound: (Bound)int.Parse(values[1]),
+                    Thetta: double.Parse(values[2])
+                ));
+        }
+
+        return new SecondBoundaryProvider(units.ToArray());
     }
 }

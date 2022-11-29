@@ -31,7 +31,7 @@ namespace BoundaryProblem.Geometry
             return new Grid(
                 GenerateNodes,
                 GenerateElements,
-                default
+                _stepSizeForElements
                 );
         }
 

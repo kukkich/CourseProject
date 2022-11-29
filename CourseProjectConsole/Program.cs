@@ -1,43 +1,42 @@
-﻿using BoundaryProblem.Calculus.Equation.Assembling;
-using BoundaryProblem.Calculus.Equation.DataStructures;
+﻿using BoundaryProblem;
+using BoundaryProblem.DataStructures.BoundaryConditions.First;
+using BoundaryProblem.DataStructures.BoundaryConditions.Second;
+using BoundaryProblem.DataStructures.BoundaryConditions.Third;
+using BoundaryProblem.Geometry;
 
-namespace CourseProjectConsole
+namespace CourseProjectConsole;
+
+internal class Program
 {
-    internal class IdentityMatrix : Matrix
+    private const string Root = "C:\\Users\\vitia\\OneDrive\\Рабочий стол\\123x\\";
+
+    private static void Main()
     {
-        private const int Size = 16;
-        private static readonly double[,] IdentityValues;
-
-        static IdentityMatrix()
+        var files = new ProblemFilePathsProvider(Root)
         {
-            IdentityValues = new double[Size, Size];
-            for (int i = 0; i < Size; i++)
-            {
-                IdentityValues[i, i] = 1;
-            }
-        }
+            Elems = "elems.txt",
+            Nodes = "nodes.txt",
+            FirstBoundary = "bar1.txt",
+            SecondBoundary = "bar2.txt",
+            ThirdBoundary = "bar3.txt"
+        };
+        
+        var first = FirstBoundaryProvider.Deserialize(files);
+        var second = SecondBoundaryProvider.Deserialize(files);
+        var third = ThirdBoundaryProvider.Deserialize(files);
+        
+        var gridBuilder = new GridBuilder(new Rectangle(
+            LeftBottom: new Point2D(0, 0),
+            RightBottom: new Point2D(3, 0),
+            LeftTop: new Point2D(0, 10),
+            RightTop: new Point2D(3, 10)
+        ));
 
-        public IdentityMatrix()
-            : base(IdentityValues)
-        { }
-    }
+        Grid grid = gridBuilder.Build(new AxisSplitParameter(XSteps: 3, YSteps: 1));
+        Grid.Serialize(grid, files);
+        var newGrid = Grid.Deserialize(files);
 
-    internal class Program
-    {
-        private static int[] _nodeIndexes;
-        private static LocalRightSideAssembler _assembler;
 
-        static void Main(string[] args)
-        {
-            var x = new Span<int>(new int[] { 1, 2, 5, 5, 5, 6, 7, 9, 9, 13, 23});
-            var z = x.BinarySearch(8);
-
-            Console.ReadLine();
-        }
-
-        private static int Mu(int i) => i % 4;
-
-        private static int Nu(int i) => i / 4;
-
+        Console.ReadLine();
     }
 }
