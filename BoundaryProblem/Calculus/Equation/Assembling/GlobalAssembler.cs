@@ -2,6 +2,7 @@
 using BoundaryProblem.Calculus.Equation.DataStructures;
 using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 using BoundaryProblem.DataStructures;
+using BoundaryProblem.DataStructures.BoundaryConditions.First;
 using BoundaryProblem.DataStructures.BoundaryConditions.Second;
 using BoundaryProblem.DataStructures.BoundaryConditions.Third;
 using BoundaryProblem.DataStructures.DensityFunction;
@@ -21,6 +22,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
         private readonly LocalRightSideAssembler _localRightSideAssembler;
         private readonly VectorInserter _vectorInserter;
         private readonly MatrixInserter _matrixInserter;
+        private readonly GaussExcluding _gaussExcluder;
 
         public Matrix XMassMatrix { get; set; }
         public Matrix YMassMatrix { get; set; }
@@ -54,6 +56,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             _portraitBuilder = new PortraitBuilder();
             _matrixInserter = new MatrixInserter();
             _vectorInserter = new VectorInserter();
+            _gaussExcluder = new GaussExcluding();
 
             GetTemplateMatrices(
                 out var xStiffnessMatrix,
@@ -114,6 +117,7 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
         private SymmetricSparseMatrix BuildPortrait() => _portraitBuilder.Build(_grid);
 
+        // TODO Протестировать
         public void ApplyThirdBoundaryConditions(EquationData equation, ThirdBoundaryProvider condition)
         {
             foreach (var flowExchangeCondition in condition.FlowExchangeConditions)
@@ -146,8 +150,6 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
 
                 // have fun!
             }
-
-            throw new NotImplementedException();
         }
 
         public void ApplySecondBoundaryConditions(EquationData equation, SecondBoundaryProvider condition)
@@ -179,9 +181,14 @@ namespace BoundaryProblem.Calculus.Equation.Assembling
             };
         }
 
-        public void ApplyFirstBoundaryConditions(EquationData equation)
+        public void ApplyFirstBoundaryConditions(EquationData equation, FirstBoundaryProvider condition)
         {
-            throw new NotImplementedException();
+            foreach (var valueCondition in condition.ValueConditions)
+                _gaussExcluder.ExcludeInSymmetric(
+                    equation,
+                    row: valueCondition.NodeIndex,
+                    fixedValue: valueCondition.Value
+                );
         }
     }
 }

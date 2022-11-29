@@ -1,3 +1,3 @@
 ﻿namespace BoundaryProblem.DataStructures.BoundaryConditions;
 
-public record BoundaryValueUnit(int NodeIndex, double Value);
+public record ValueUnit(int NodeIndex, double Value);
