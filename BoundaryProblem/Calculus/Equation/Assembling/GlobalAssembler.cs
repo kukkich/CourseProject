@@ -97,9 +97,9 @@ public class GlobalAssembler
     {
         SymmetricSparseMatrix globalMatrix = BuildPortrait();
         EquationData equation = new(
-            Matrix: globalMatrix,
-            Solution: new Vector(new double[globalMatrix.RowIndexes.Length]),
-            RightSide: new Vector(new double[globalMatrix.RowIndexes.Length])
+            matrix: globalMatrix,
+            solution: new Vector(new double[globalMatrix.RowIndexes.Length]),
+            rightSide: new Vector(new double[globalMatrix.RowIndexes.Length])
         );
 
         foreach (var element in _grid.Elements)
@@ -117,7 +117,7 @@ public class GlobalAssembler
     private SymmetricSparseMatrix BuildPortrait() => _portraitBuilder.Build(_grid);
 
     // TODO Протестировать
-    public void ApplyThirdBoundaryConditions(EquationData equation, ThirdBoundaryProvider condition)
+    public GlobalAssembler ApplyThirdBoundaryConditions(EquationData equation, ThirdBoundaryProvider condition)
     {
         foreach (var flowExchangeCondition in condition.FlowExchangeConditions)
         {
@@ -141,17 +141,12 @@ public class GlobalAssembler
 
             _vectorInserter.Insert(equation.RightSide, localVector);
             _matrixInserter.Insert(equation.Matrix, localMatrix);
-            // A_S3 = ...
-            // b_S3 = A_S3 * Vector.Create(Element.NodesOnBound, flowCondition.Environment);
-
-            // Create Local Objects (matrix A and vector B)
-            // Insert Local Objects
-
-            // have fun!
         }
+
+        return this;
     }
 
-    public void ApplySecondBoundaryConditions(EquationData equation, SecondBoundaryProvider condition)
+    public GlobalAssembler ApplySecondBoundaryConditions(EquationData equation, SecondBoundaryProvider condition)
     {
         foreach (var flowCondition in condition.FlowConditions)
         {
@@ -168,6 +163,8 @@ public class GlobalAssembler
 
             _vectorInserter.Insert(equation.RightSide, localVector);
         }
+
+        return this;
     }
 
     private Matrix GetMassMatrixForBound(Bound bound)
@@ -180,7 +177,7 @@ public class GlobalAssembler
         };
     }
 
-    public void ApplyFirstBoundaryConditions(EquationData equation, FirstBoundaryProvider condition)
+    public GlobalAssembler ApplyFirstBoundaryConditions(EquationData equation, FirstBoundaryProvider condition)
     {
         foreach (var valueCondition in condition.ValueConditions)
             _gaussExcluder.ExcludeInSymmetric(
@@ -188,5 +185,7 @@ public class GlobalAssembler
                 row: valueCondition.NodeIndex,
                 fixedValue: valueCondition.Value
             );
+
+        return this;
     }
 }

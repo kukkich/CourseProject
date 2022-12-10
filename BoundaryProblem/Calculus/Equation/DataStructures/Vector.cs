@@ -1,57 +1,72 @@
-﻿namespace BoundaryProblem.Calculus.Equation.DataStructures
+﻿namespace BoundaryProblem.Calculus.Equation.DataStructures;
+
+public class Vector
 {
-    public class Vector
+    public static Vector Create(int length, double defaultValue=0)
     {
-        public static Vector Create(int length, double defaultValue)
-        {
-            return Create(length, _ => defaultValue);
-        }
+        return Create(length, _ => defaultValue);
+    }
+    public static Vector Create(int length, Func<int, double> filling)
+    {
+        var values = new double[length];
+        for (int i = 0; i < length; i++)
+            values[i] = filling(i);
 
-        public static Vector Create(int length, Func<int, double> filling)
-        {
-            var values = new double[length];
-            for (int i = 0; i < length; i++)
-                values[i] = filling(i);
+        return new Vector(values);
+    }
 
-            return new Vector(values);
-        }
+    public virtual double this[int x]
+    {
+        get => _values[x];
+        set => _values[x] = value;
+    }
+    public int Length => _values.Length;
+    public double Norm => Math.Sqrt(ScalarProduct(this, this));
 
-        public static Vector operator *(Matrix matrix, Vector vector)
-        {
-            var result = new double[vector.Length];
+    private readonly double[] _values;
 
-            for (int i = 0; i < vector.Length; i++)
-            for (int j = 0; j < vector.Length; j++)
-                result[i] += matrix[i, j] * vector[j];
+    public Vector Copy()
+    {
+        var values = new double[Length];
+        for (int i = 0; i < Length; i++)
+            values[i] = this[i];
 
-            return new Vector(result);
-        }
+        return new Vector(values);
+    }
+    
+    public Vector(params double[] values)
+    {
+        _values = values;
+    }
 
-        public static Vector operator *(Vector vector, Matrix matrix) =>
-            matrix * vector;
+    public static Vector operator *(Matrix matrix, Vector vector)
+    {
+        var result = new double[vector.Length];
 
-        public virtual double this[int x]
-        {
-            get => _values[x];
-            set => _values[x] = value;
-        }
+        for (int i = 0; i < vector.Length; i++)
+        for (int j = 0; j < vector.Length; j++)
+            result[i] += matrix[i, j] * vector[j];
 
-        public Vector Copy()
-        {
-            var values = new double[Length];
-            for (int i = 0; i < Length; i++)
-                values[i] = this[i];
+        return new Vector(result);
+    }
+    public static Vector operator *(Vector vector, Matrix matrix) =>
+        matrix * vector;
 
-            return new Vector(values);
-        }
+    public static double ScalarProduct(Vector v, Vector u)
+    {
+        if (v.Length != u.Length)
+            throw new ArgumentOutOfRangeException($"{nameof(v)} and {nameof(u)} must have the same length");
 
-        public int Length => _values.Length;
+        var sum = 0d;
 
-        private readonly double[] _values;
+        for (var i = 0; i < v.Length; i++)
+            sum += u[i] * v[i];
 
-        public Vector(params double[] values)
-        {
-            _values = values;
-        }
+        return sum;
+    }
+
+    public double ScalarProduct(Vector v)
+    {
+        return ScalarProduct(this, v);
     }
 }

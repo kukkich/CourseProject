@@ -32,6 +32,18 @@ public class ProblemFilePathsProvider
         set => _thirdBoundary = value;
     }
     private string _thirdBoundary;
+    public string DensityFunction
+    {
+        get => AttachRootPath(_densityFunction);
+        set => _densityFunction = value;
+    }
+    private string _densityFunction;
+    public string Material
+    {
+        get => AttachRootPath(_material);
+        set => _material = value;
+    }
+    private string _material;
 
     private readonly string _rootDirectory;
 
