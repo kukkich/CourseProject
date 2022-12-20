@@ -122,6 +122,7 @@ public class GlobalAssembler
         foreach (var flowExchangeCondition in condition.FlowExchangeConditions)
         {
             var massMatrix = GetMassMatrixForBound(flowExchangeCondition.Bound);
+
             Element element = _grid.Elements[flowExchangeCondition.ElementId];
             var boundNodeIndexes = element.GetBoundNodeIndexes(flowExchangeCondition.Bound);
 
@@ -139,8 +140,8 @@ public class GlobalAssembler
                 new IndexPermutation(boundNodeIndexes)
             );
 
-            _vectorInserter.Insert(equation.RightSide, localVector);
             _matrixInserter.Insert(equation.Matrix, localMatrix);
+            _vectorInserter.Insert(equation.RightSide, localVector);
         }
 
         return this;

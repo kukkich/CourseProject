@@ -57,7 +57,7 @@ public static class LinearAlgebra
         {
             throw new ArgumentOutOfRangeException($"{nameof(matrix.RowIndexes)} and {nameof(x)} must have the same length");
         }
-
+        
         for (var i = 0; i < x.Length; i++)
         {
             resultMemory[i] += x[i] * matrix.Diagonal[i];
