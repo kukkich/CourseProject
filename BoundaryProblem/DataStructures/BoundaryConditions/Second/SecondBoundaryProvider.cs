@@ -28,7 +28,13 @@ public record SecondBoundaryProvider(params FlowUnit[] FlowConditions)
                 new FlowUnit(
                     ElementId: int.Parse(values[0]),
                     Bound: (Bound)int.Parse(values[1]),
-                    Thetta: double.Parse(values[2])
+                    Thetta: new []
+                    {
+                        double.Parse(values[2]),
+                        double.Parse(values[3]),
+                        double.Parse(values[4]),
+                        double.Parse(values[5])
+                    }
                 ));
         }
 

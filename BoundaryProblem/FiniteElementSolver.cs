@@ -47,22 +47,22 @@ public class FiniteElementSolver
         var equation = _globalAssembler.BuildEquation();
 
         var a = equation.Matrix;
-        for (int i = 0; i < a.Diagonal.Length; i++)
-        {
-            for (int j = 0; j < a.Diagonal.Length; j++)
-            {
-                try
-                {
-                    Console.Write($"{a[i, j]:##,###}   ");
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    Console.Write($"{0d:F4}   ");
-                }
-            }
-            Console.WriteLine();
-        }
-        Console.WriteLine();
+        //for (int i = 0; i < a.Diagonal.Length; i++)
+        //{
+        //    for (int j = 0; j < a.Diagonal.Length; j++)
+        //    {
+        //        try
+        //        {
+        //            Console.Write($"{a[i, j]:F2}   ");
+        //        }
+        //        catch (IndexOutOfRangeException e)
+        //        {
+        //            Console.Write($"      ");
+        //        }
+        //    }
+        //    Console.WriteLine();
+        //}
+        //Console.WriteLine();
 
         _globalAssembler.ApplySecondBoundaryConditions(equation, _secondBoundary)
             .ApplyThirdBoundaryConditions(equation, _thirdBoundary)

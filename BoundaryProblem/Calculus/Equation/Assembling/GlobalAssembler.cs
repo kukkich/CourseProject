@@ -128,7 +128,7 @@ public class GlobalAssembler
 
             //TODO переименовать маст хэв
             var A_S3 = flowExchangeCondition.Betta * massMatrix;
-            var environmentVector = Vector.Create(Element.NodesOnBound, flowExchangeCondition.Environment);
+            var environmentVector = Vector.Create(Element.NodesOnBound, i => flowExchangeCondition.Environment[i]);
             var b_S3 = A_S3 * environmentVector;
 
             var localVector = new LocalVector(
@@ -154,7 +154,7 @@ public class GlobalAssembler
             var massMatrix = GetMassMatrixForBound(flowCondition.Bound);
 
             Element element = _grid.Elements[flowCondition.ElementId];
-            var thettaVector = Vector.Create(Element.NodesOnBound, flowCondition.Thetta);
+            var thettaVector = Vector.Create(Element.NodesOnBound, i => flowCondition.Thetta[i]);
 
             var boundNodeIndexes = element.GetBoundNodeIndexes(flowCondition.Bound);
             LocalVector localVector = new(

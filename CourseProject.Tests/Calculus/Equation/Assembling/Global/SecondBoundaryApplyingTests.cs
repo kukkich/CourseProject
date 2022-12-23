@@ -73,8 +73,8 @@ public class SecondBoundaryApplyingTests
         #endregion
 
         var conditions = new SecondBoundaryProvider(
-            new FlowUnit(0, Bound.Bottom, 2d),
-            new FlowUnit(0, Bound.Right, -1d)
+            new FlowUnit(0, Bound.Bottom, new[] { 2d, 2d, 2d, 2d }),
+            new FlowUnit(0, Bound.Right, new[] { -1d, -1d, -1d, -1d })
         );
 
         Assembler.ApplySecondBoundaryConditions(Equation, conditions);

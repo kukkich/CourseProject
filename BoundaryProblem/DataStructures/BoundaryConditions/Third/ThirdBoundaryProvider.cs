@@ -29,7 +29,13 @@ public record ThirdBoundaryProvider(FlowExchangeUnit[] FlowExchangeConditions)
                     ElementId: int.Parse(values[0]),
                     Bound: (Bound)int.Parse(values[1]),
                     Betta: double.Parse(values[2]),
-                    Environment: double.Parse(values[3])
+                    Environment: new []
+                    {
+                        double.Parse(values[3]),
+                        double.Parse(values[4]),
+                        double.Parse(values[5]),
+                        double.Parse(values[6]),
+                    }
                 ));
         }
 
