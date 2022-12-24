@@ -39,5 +39,4 @@ public readonly record struct Element(int[] NodeIndexes, int MaterialId = 0)
             },
             _ => throw new ArgumentOutOfRangeException()
         };
-    public readonly int MaterialId = MaterialId;
 }

@@ -1,7 +1,7 @@
-﻿using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
-using BoundaryProblem.Calculus.Equation.DataStructures;
+﻿using BoundaryProblem.Calculus.Equation.DataStructures;
+using BoundaryProblem.Calculus.Equation.DataStructures.LocalObjects;
 
-namespace BoundaryProblem.Calculus.Equation.Assembling
+namespace BoundaryProblem.Calculus.Equation.Assembling.Algorithms
 {
     public class VectorInserter
     {

@@ -40,5 +40,19 @@
 
             return new Matrix(values);
         }
+
+        public Matrix Clone()
+        {
+            var newValues = new double[Length, Length];
+            for (int i = 0; i < Length; i++)
+            {
+                for (int j = 0; j < Length; j++)
+                {
+                    newValues[i, j] = this[i, j];
+                }
+            }
+
+            return new Matrix(newValues, 1d);
+        }
     }
 }

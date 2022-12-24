@@ -4,6 +4,6 @@ public enum Bound
 {
     Left,
     Right,
+    Bottom,
     Top,
-    Bottom
 }
