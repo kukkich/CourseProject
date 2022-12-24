@@ -12,8 +12,8 @@ public class ConjugateGradientSolver
     private EquationData _equation;
     private Vector r;
     private Vector z;
-    private Vector _additionalMemory;
-    private Vector _additionalMemory2;
+    private Vector _rNext;
+    private Vector _aByZProduct;
 
     public ConjugateGradientSolver(IPreconditioner preconditioner, double precision, int maxIteration)
     {
@@ -37,40 +37,42 @@ public class ConjugateGradientSolver
         
         for (var i = 1; i < _maxIteration && (r.Norm / fNorm) >= _precision; i++)
         {
-            var scalarProduct = Vector.ScalarProduct(
-                _preconditioner.MultiplyOn(r),
+            var preconditionedRScalarProduct = Vector.ScalarProduct(
+                _preconditioner.MultiplyOn(r, _aByZProduct), // could pass any memory
                 r
             );
 
-            var AzProduct = LinearAlgebra.Multiply(_equation.Matrix, z);
+            _aByZProduct = LinearAlgebra.Multiply(_equation.Matrix, z, _aByZProduct);
             
             var zScalarProduct = Vector.ScalarProduct(
-                AzProduct,
+                _aByZProduct,
                 z
             );
 
-            var alpha = scalarProduct / zScalarProduct;
-
+            var alpha = preconditionedRScalarProduct / zScalarProduct;
+            
             _equation.Solution = LinearAlgebra.LinearCombination(
                 _equation.Solution, z,
-                1d, alpha
+                1d, alpha,
+                _equation.Solution
             );
 
-            var rNext = LinearAlgebra.LinearCombination(
-                r, AzProduct,
+            _rNext = LinearAlgebra.LinearCombination(
+                r, _aByZProduct,
                 1d, -alpha,
-                _additionalMemory
+                _rNext
             );
 
-            var betta = Vector.ScalarProduct(_preconditioner.MultiplyOn(rNext), rNext) /
-                        scalarProduct;
+            var betta = Vector.ScalarProduct(_preconditioner.MultiplyOn(_rNext), _rNext) /
+                        preconditionedRScalarProduct;
 
             z = LinearAlgebra.LinearCombination(
-                _preconditioner.MultiplyOn(rNext), z,
-                1d, betta
+                _preconditioner.MultiplyOn(_rNext), z,
+                1d, betta,
+                z
             );
 
-            r = rNext;
+            r = _rNext;
         }
     }
 
@@ -84,7 +86,7 @@ public class ConjugateGradientSolver
         );
         z = _preconditioner.MultiplyOn(r);
 
-        _additionalMemory = Vector.Create(equation.RightSide.Length);
-        _additionalMemory2 = Vector.Create(equation.RightSide.Length);
+        _rNext = Vector.Create(equation.RightSide.Length);
+        _aByZProduct = Vector.Create(equation.RightSide.Length);
     }
 }

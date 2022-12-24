@@ -68,6 +68,4 @@ public class FiniteElementSolution
 
         return rect.Contains(point);
     }
-
-
 }

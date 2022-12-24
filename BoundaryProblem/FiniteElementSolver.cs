@@ -47,6 +47,7 @@ public class FiniteElementSolver
         var equation = _globalAssembler.BuildEquation();
 
         var a = equation.Matrix;
+
         //for (int i = 0; i < a.Diagonal.Length; i++)
         //{
         //    for (int j = 0; j < a.Diagonal.Length; j++)
@@ -71,7 +72,7 @@ public class FiniteElementSolver
         
 
         IPreconditioner preconditioner = new DiagonalPreconditioner(equation.Matrix.Diagonal);
-        SLAESolver = new ConjugateGradientSolver(preconditioner, SolutionPrecision ,MaxIteration);
+        SLAESolver = new ConjugateGradientSolver(preconditioner, SolutionPrecision, MaxIteration);
 
         var solution = SLAESolver.Solve(equation);
 

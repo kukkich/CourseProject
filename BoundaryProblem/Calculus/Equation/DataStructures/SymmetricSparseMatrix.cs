@@ -2,23 +2,6 @@
 
 public class SymmetricSparseMatrix
 {
-    //public IEnumerable<IndexValue> this[int rowIndex] 
-    //{
-    //    get
-    //    {
-    //        if (rowIndex < 0) throw new ArgumentOutOfRangeException(nameof(rowIndex));
-
-    //        var end = _rowIndexes[rowIndex];
-
-    //        var begin = rowIndex == 0
-    //            ? 0
-    //            : _rowIndexes[rowIndex - 1];
-
-    //        for (var i = begin; i < end; i++)
-    //            yield return new IndexValue(_columnIndexes[i], Values[i], i);
-    //    }
-    //}
-
     public SparseMatrixRow this[int rowIndex]
     {
         get
@@ -39,8 +22,7 @@ public class SymmetricSparseMatrix
             );
         }
     }
-
-    // TODO заменить на работу с RefIndexValue
+    
     public ref double this[int rowIndex, int columnIndex]
     {
         get
@@ -54,7 +36,6 @@ public class SymmetricSparseMatrix
             if (columnIndex > rowIndex) 
                 (rowIndex, columnIndex) = (columnIndex, rowIndex);
 
-            // !TODO сделать обход через индексер строк в этом классе, не дублировать код
             var end = _rowIndexes[rowIndex];
 
             var begin = rowIndex == 0

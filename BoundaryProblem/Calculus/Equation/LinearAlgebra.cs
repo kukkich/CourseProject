@@ -60,7 +60,7 @@ public static class LinearAlgebra
         
         for (var i = 0; i < x.Length; i++)
         {
-            resultMemory[i] += x[i] * matrix.Diagonal[i];
+            resultMemory[i] = x[i] * matrix.Diagonal[i];
         }
 
         for (var i = 0; i < x.Length; i++)

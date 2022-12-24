@@ -8,14 +8,16 @@ namespace CourseProjectConsole;
 
 public static class Program
 {
-    private const string Root = "C:\\Users\\vitia\\OneDrive\\Рабочий стол\\FiniteElems\\Сходимость\\1111 U=exp(xy) (1, 4) 32x32\\";
+    const string Root = "C:\\Users\\vitia\\OneDrive\\Рабочий стол\\FiniteElems\\Тесты\\Разный материал\\1111 U=exp(xy) (0.5, 2) 2x2\\";
 
     public static Logger Logger { get; set; } = new Logger();
 
     public static Point2D Min = new Point2D(-2, 0);
     public static Point2D Max = new Point2D(1, 3);
     public static Point2D Step = new Point2D(1d / N, 1d / N);
-    public const int N = 32;
+    public const int N = 2;
+    public const double Lambda = 0.5d;
+    public const double Gamma = 2d;
 
     private static void Main()
     {
@@ -31,8 +33,11 @@ public static class Program
         };
 
         var grid = MakeGrid(files);
-        MakeF(grid, files, p => -1d * Math.Exp(p.X * p.Y) * (p.Y * p.Y + p.X * p.X - 4d));
-        MakeFirstBoundaryFor32X32(grid, files);
+        MakeF(
+            grid, files, 
+            p => -1d * Lambda * Math.Exp(p.X * p.Y) * (p.Y * p.Y + p.X * p.X - Gamma / Lambda)
+        );
+        MakeFirstBoundaryFor2X2(grid, files);
 
         var solver = new FiniteElementSolver(files)
         {
@@ -41,29 +46,29 @@ public static class Program
         };
         var solution = solver.Solve();
 
-        //Logger.LogVector(solution.FunctionWeights);
-
-        //Console.WriteLine();
-        //for (double y = Max.Y; y >= Min.Y; y -= Step.Y)
-        //{
-        //    Console.Write($"{y:F5}: ");
-        //    for (double x = Min.X; x <= Max.X; x += Step.X)
-        //    {
-        //        Console.Write($"{solution.Calculate(new Point2D(x, y)):F5}   ");
-        //    }
-        //    Console.WriteLine();
-        //}
-
-        //Console.Write($"        ");
-        //for (double x = Min.X; x <= Max.X; x += Step.X)
-        //{
-        //    Console.Write($"{x:F5}   ");
-        //}
+        Logger.LogVector(solution.FunctionWeights);
 
         Console.WriteLine();
-        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-        Console.WriteLine($"U(0.35, 2.65) = {solution.Calculate(new Point2D(0.35, 2.65)):E15}");
-        Console.WriteLine($"U(-1.4, 2.15) = {solution.Calculate(new Point2D(-1.4, 2.15)):E15}");
+        for (double y = Max.Y; y >= Min.Y; y -= Step.Y)
+        {
+            Console.Write($"{y:F5}: ");
+            for (double x = Min.X; x <= Max.X; x += Step.X)
+            {
+                Console.Write($"{solution.Calculate(new Point2D(x, y)):F5}   ");
+            }
+            Console.WriteLine();
+        }
+
+        Console.Write($"        ");
+        for (double x = Min.X; x <= Max.X; x += Step.X)
+        {
+            Console.Write($"{x:F5}   ");
+        }
+
+        //Console.WriteLine();
+        //Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        //Console.WriteLine($"U(0.35, 2.65) = {solution.Calculate(new Point2D(0.35, 2.65)):E15}");
+        //Console.WriteLine($"U(-1.4, 2.15) = {solution.Calculate(new Point2D(-1.4, 2.15)):E15}");
     }
 
     private static Grid MakeGrid(ProblemFilePathsProvider files)
