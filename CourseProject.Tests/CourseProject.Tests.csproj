@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -18,6 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoundaryProblem\BoundaryProblem.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Asserts\" />
+    <Folder Include="Calculus\Equation\Assembling\Excluding\" />
+    <Folder Include="Calculus\Equation\Solving\" />
   </ItemGroup>
 
 </Project>
