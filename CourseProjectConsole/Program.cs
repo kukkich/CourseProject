@@ -3,24 +3,29 @@ using BoundaryProblem;
 using BoundaryProblem.DataStructures;
 using BoundaryProblem.Geometry;
 using BoundaryProblem.Loggining;
+using BoundaryProblem.Time;
+using BoundaryProblem.Time.Boundary;
+using BoundaryProblem.Time.Splitting;
 
 namespace CourseProjectConsole;
 
 public static class Program
 {
-    const string Root = "C:\\Users\\vitia\\OneDrive\\Рабочий стол\\FiniteElems\\Тесты\\Разный материал\\1111 U=exp(xy) (0.5, 2) 2x2\\";
+    const string Root = "C:\\Users\\vitia\\OneDrive\\Рабочий стол\\FiniteElems\\Time\\Simple\\";
 
     public static Logger Logger { get; set; } = new Logger();
 
-    public static Point2D Min = new Point2D(-2, 0);
-    public static Point2D Max = new Point2D(1, 3);
-    public static Point2D Step = new Point2D(1d / N, 1d / N);
+    public static Point2D Min = new (0, 0);
+    public static Point2D Max = new (2, 2);
+    public static Point2D Step = new (1d / N, 1d / N);
     public const int N = 2;
     public const double Lambda = 0.5d;
     public const double Gamma = 2d;
 
     private static void Main()
     {
+        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
         var files = new ProblemFilePathsProvider(Root)
         {
             Elems = "elems.txt",
@@ -31,10 +36,35 @@ public static class Program
             DensityFunction = "f.txt",
             Material = "mat.txt"
         };
+        Func<TimePoint2D, double> u = (p) => (Math.Pow(p.X, 3) + Math.Pow(p.Y, 3)) * Math.Pow(p.T, 3);
+        Func<TimePoint2D, double> f = (p) => -6d * (Math.Pow(p.X, 1) + Math.Pow(p.Y, 1)) * Math.Pow(p.T, 3) + 3d* Math.Pow(p.T, 2)* (Math.Pow(p.X, 3) + Math.Pow(p.Y, 3));
 
         var grid = MakeGrid(files);
+
+        var solver = new ParabolicEquationSolver(u, f,
+            ellipticSolver: new FiniteElementSolver(files)
+            {
+                MaxIteration = 1000,
+                SolutionPrecision = 1e-14
+            },
+            time: new TimeSeries(new UniformSplitter(30), new Interval(0, 3)),
+            new FirstTimeBoundary(u)
+            {
+                [0] = new[] { Bound.Bottom, Bound.Left },
+                [1] = new[] { Bound.Bottom, Bound.Right },
+                [2] = new[] { Bound.Top, Bound.Left },
+                [3] = new[] { Bound.Top, Bound.Right },
+            }
+        );
+        solver.IterateToEnd();
+        var solution = solver.GetSolution(3d);
+        Console.WriteLine($"{solution.Calculate(new Point2D(1d/3, 4d/3))} {u(new TimePoint2D(1d/3, 4d/3, 3d))}");
+    }
+
+    private static void SolveExample(Grid grid, ProblemFilePathsProvider files)
+    {
         MakeF(
-            grid, files, 
+            grid, files,
             p => -1d * Lambda * Math.Exp(p.X * p.Y) * (p.Y * p.Y + p.X * p.X - Gamma / Lambda)
         );
         MakeFirstBoundaryFor2X2(grid, files);
@@ -56,6 +86,7 @@ public static class Program
             {
                 Console.Write($"{solution.Calculate(new Point2D(x, y)):F5}   ");
             }
+
             Console.WriteLine();
         }
 
@@ -89,7 +120,7 @@ public static class Program
     private static void MakeF(Grid grid, ProblemFilePathsProvider files, Func<Point2D, double> f)
     {
         using var writer = new StreamWriter(files.DensityFunction);
-
+        writer.WriteLine(grid.Nodes.Length);
         for (var i = 0; i < grid.Nodes.Length; i++)
         {
             var node = grid.Nodes[i];
@@ -112,6 +143,7 @@ public static class Program
         }
     }
 
+    #region 1 FirstTimeBoundary
     public static void MakeFirstBoundaryFor2X2(Grid grid, ProblemFilePathsProvider files)
     {
         MakeFirstBoundary(
@@ -274,4 +306,5 @@ public static class Program
             files
         );
     }
+    #endregion
 }

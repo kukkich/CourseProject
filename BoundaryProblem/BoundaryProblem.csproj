@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Calculus\Equation\Solving\Preconditioner\" />
+    <Folder Include="Time\Providers\" />
   </ItemGroup>
 
 </Project>

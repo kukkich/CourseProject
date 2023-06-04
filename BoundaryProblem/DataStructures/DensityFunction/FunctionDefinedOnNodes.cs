@@ -2,9 +2,9 @@
 
 public class FunctionDefinedOnNodes : IDensityFunctionProvider
 {
-    private readonly Dictionary<int, double> _values;
+    private readonly double[] _values;
 
-    public FunctionDefinedOnNodes(Dictionary<int, double> values)
+    public FunctionDefinedOnNodes(double[] values)
     {
         _values = values;
     }
@@ -12,18 +12,18 @@ public class FunctionDefinedOnNodes : IDensityFunctionProvider
     public static IDensityFunctionProvider Deserialize(ProblemFilePathsProvider files)
     {
         using var stream = new StreamReader(files.DensityFunction);
-        var functionValues = new Dictionary<int, double>();
+        var line = stream.ReadLine();
+        var size = int.Parse(line);
+        if (String.IsNullOrEmpty(line)) throw new Exception("No F size");
+        var functionValues = new double[size];
 
         while (true)
         {
-            var line = stream.ReadLine();
+            line = stream.ReadLine();
             if (String.IsNullOrEmpty(line)) break;
 
             var values = line.Split(' ');
-            functionValues.Add(
-                int.Parse(values[0]),
-                double.Parse(values[1])
-            );
+            functionValues[int.Parse(values[0])] = double.Parse(values[1]);
         }
 
         return new FunctionDefinedOnNodes(functionValues);
@@ -31,8 +31,7 @@ public class FunctionDefinedOnNodes : IDensityFunctionProvider
 
     public double Calc(int globalNodeIndex)
     {
-        if (_values.TryGetValue(globalNodeIndex, out var value))
-            return value;
+            return _values[globalNodeIndex];
 
         throw new ArgumentOutOfRangeException($"There no node with index {globalNodeIndex}");
     }
