@@ -3,7 +3,7 @@
 public readonly ref struct SparseMatrixRow
 {
     public int Index { get; }
-
+    
     public ref double this[int column]
     {
         get
@@ -56,13 +56,11 @@ public readonly ref struct SparseMatrixRow
         public bool MoveNext()
         {
             int index = _index + 1;
-            if (index < _values.Length)
-            {
-                _index = index;
-                return true;
-            }
+            if (index >= _values.Length) return false;
 
-            return false;
+            _index = index;
+            return true;
+
         }
 
         public RefIndexValue Current => new(_columnIndexes[_index], _values, _index);

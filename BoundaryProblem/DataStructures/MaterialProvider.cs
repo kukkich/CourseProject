@@ -1,39 +1,36 @@
-﻿using BoundaryProblem.DataStructures.BoundaryConditions.First;
-using BoundaryProblem.DataStructures.DensityFunction;
+﻿namespace BoundaryProblem.DataStructures;   
 
-namespace BoundaryProblem.DataStructures
+public class MaterialProvider : IMaterialProvider
 {
-    public class MaterialProvider : IMaterialProvider
+    public readonly Material[] Materials;
+
+    public MaterialProvider(Material[] materials)
     {
-        private readonly Material[] _materials;
+        Materials = materials;
+    }
 
-        public MaterialProvider(Material[] materials)
-        {
-            _materials = materials;
-        }
+    public Material GetMaterialById(int id) => Materials[id];
 
-        public Material GetMaterialById(int id) => _materials[id];
-
-        public static IMaterialProvider Deserialize(ProblemFilePathsProvider files)
-        {
-            using var stream = new StreamReader(files.Material);
+    public static MaterialProvider Deserialize(ProblemFilePathsProvider files)
+    {
+        using var stream = new StreamReader(files.Material);
             
-            var materials = new Material[int.Parse(stream.ReadLine())];
+        var materials = new Material[int.Parse(stream.ReadLine())];
 
-            for (int i = 0; ; i++)
-            {
-                var line = stream.ReadLine();
-                if (String.IsNullOrEmpty(line)) break;
+        for (int i = 0; ; i++)
+        {
+            var line = stream.ReadLine();
+            if (String.IsNullOrEmpty(line)) break;
 
-                var values = line.Split(' ');
-                materials[i] = 
-                    new Material(
-                        double.Parse(values[0]),
-                        double.Parse(values[1])
-                    );
-            }
-
-            return new MaterialProvider(materials);
+            var values = line.Split(' ');
+            materials[i] = 
+                new Material(
+                    double.Parse(values[0]),
+                    double.Parse(values[1]),
+                    double.Parse(values[2])
+                );
         }
+
+        return new MaterialProvider(materials);
     }
 }

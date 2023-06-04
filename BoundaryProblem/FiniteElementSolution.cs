@@ -6,7 +6,7 @@ namespace BoundaryProblem;
 
 public class FiniteElementSolution
 {
-    private static Func<double, double>[] LocalFunc { get; set; }
+    private static Func<double, double>[] LocalFunc { get; }
 
     static FiniteElementSolution()
     {
@@ -34,7 +34,7 @@ public class FiniteElementSolution
         var elem = Grid.Elements.First(x => ElementHas(x, point));
         var leftBottomNode = Grid.Nodes[elem.NodeIndexes[0]];
         Point2D ksi = new Point2D(
-            (point.X - leftBottomNode.X)/ Grid.ElementLength.X,
+            (point.X - leftBottomNode.X) / Grid.ElementLength.X,
             (point.Y - leftBottomNode.Y) / Grid.ElementLength.Y
             );
 

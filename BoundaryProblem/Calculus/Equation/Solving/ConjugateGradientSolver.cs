@@ -34,8 +34,8 @@ public class ConjugateGradientSolver
     private void IterationProcess()
     {
         var fNorm = _equation.RightSide.Norm;
-        
-        for (var i = 1; i < _maxIteration && (r.Norm / fNorm) >= _precision; i++)
+        int i;
+        for (i = 1; i < _maxIteration && (r.Norm / fNorm) >= _precision; i++)
         {
             var preconditionedRScalarProduct = Vector.ScalarProduct(
                 _preconditioner.MultiplyOn(r, _aByZProduct), // could pass any memory
@@ -74,6 +74,8 @@ public class ConjugateGradientSolver
 
             r = _rNext;
         }
+
+        Console.WriteLine($"{i} {(r.Norm / fNorm):E} ");
     }
 
     private void InitializeStartValues(EquationData equation)
